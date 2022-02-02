@@ -1,0 +1,88 @@
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const {
+    Server
+} = require("socket.io");
+const io = new Server(server);
+const {
+    Controller
+} = require("./logic/controller.js")
+const {
+    createId
+} = require("./logic/utils")
+//===================
+
+const state = {};
+// map client id to the room its connected to (lookup table)
+const clientRooms = {};
+
+app.get('/view', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', (client) => {
+    console.log('a user connected');
+
+    client.on('newGame', () => {
+        let roomName = createId(5);
+        clientRooms[client.id] = roomName;
+        client.emit('gameCode', roomName);
+
+        state[roomName] = new Controller();
+
+        client.join(roomName);
+        // set the player id
+        client.number = 1;
+
+        // send the player his id
+        client.emit('init', 1);
+    });
+
+    client.on('joinGame', (code) => {
+        const room = io.sockets.adapter.rooms[code];
+
+        let allUsers;
+        if (room) {
+            allUsers = room.sockets;
+        }
+
+        let numClients = 0;
+        if (allUsers) {
+            numClients = Object.keys(allUsers).length;
+        }
+
+        if (numClients === 0) {
+            client.emit('unkownGame');
+            // maybe just create one with this code
+            return;
+        } else if (numClients > 1) {
+            client.emit('tooManyPlayers');
+            return;
+        }
+
+        clientRooms[client.id] = code;
+        client.join(code);
+
+        // set the player id
+        client.number = 2;
+
+        // send the player his id
+        client.emit('init', 2);
+
+        // start the game here
+        let controller = state[code];
+        controller.startGame(code);
+
+        // when the game is over controller needs to be set to null (state[code] = null)
+    });
+
+    client.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
+
+server.listen(3000, () => {
+    console.log('listening on http://localhost:3000/view');
+});

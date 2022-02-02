@@ -1,26 +1,99 @@
-const express = require('express');
-const app = express();
-const http = require('http');
-const server = http.createServer(app);
+//https://www.youtube.com/watch?v=cXxEiWudIUY&t=2658s
 const {
-    Server
-} = require("socket.io");
-const io = new Server(server);
-const { Controller } = require("./logic/controller.js")
+  WebSocketServer,
+  WebSocket
+} = require("ws")
+const {
+  Controller
+} = require("./logic/controller")
+const {
+  createId
+} = require("./logic/utils")
 
-app.get('/view', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+const games = {}
+
+const server = new WebSocketServer({
+  "port": 3000,
+})
+
+server.on('connection', function connection(socket) {
+  console.log("somone joined");
+  socket.on('message', function message(json) {
+    const msg = JSON.parse(json);
+    const type = msg.type;
+    const params = msg.params;
+    console.log('received: %s', msg);
+
+    switch (msg.type) {
+      case 'create':
+        let id = createId(5);
+        console.log('create', id);
+        games[id] = new Controller();
+
+        socket.room = id;
+        socket.id = 1;
+
+        games[id].joinGame(socket);
+
+        socket.sendJSON({
+          type: 'init',
+          params: {
+            player: 1,
+            code: id
+          }
+        });
+        break;
+      case 'join':
+        if (Object.keys(games).includes(params.code)) {
+          console.log('Game', params.code, 'exists');
+
+          // max two players per room
+          console.log("current player:", games[params.code].players.size)
+          if (games[params.code].players.size >= 2) {
+            console.log("full");
+            socket.sendJSON({
+              type: "full",
+              params: {}
+            })
+            break;
+          }
+
+          socket.sendJSON({
+            type: 'code',
+            params: {
+              code: params.code
+            }
+          });
+
+          socket.room = params.code;
+          socket.id = 2;
+          
+          socket.sendJSON({
+            type: 'init',
+            params: {
+              player: 2
+            }
+          });
+
+          games[params.code].joinGame(socket);
+
+        } else {
+          console.log('Game', params.code, 'does not exist');
+        }
+
+        console.log(`join with code ${msg.params.code}`);
+        break;
+
+      default:
+        if (socket.room !== undefined)
+          games[socket.room].handle(msg);
+        break;
+    }
+  });
+
+  // socket.send('something');
 });
 
-io.on('connection', (socket) => {
-    console.log('a user connected');
-    let controller = new Controller();
-
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-});
-
-server.listen(3000, () => {
-    console.log('listening on *:3000');
-});
+WebSocket.prototype.sendJSON = function (msg) {
+  this.send(JSON.stringify(msg));
+}
