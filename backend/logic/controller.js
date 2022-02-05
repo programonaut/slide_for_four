@@ -36,13 +36,13 @@ class Controller {
         });
     }
 
-    finishGame() {
+    async finishGame() {
         this.broadcast({
             type: "win",
             params: {
                 player: 1,
             }
-        });
+        }, true);
     }
 
     handle(msg) {
@@ -70,10 +70,10 @@ class Controller {
         }
     }
 
-    broadcast(msg) {
+    broadcast(msg, later) {
         for (const player of this.players.values()) {
             console.log(player.id);
-            player.sendJSON(msg);
+            player.sendJSON(msg, later);
         }
     }
 

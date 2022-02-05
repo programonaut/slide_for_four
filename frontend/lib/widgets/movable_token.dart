@@ -1,5 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../helper/ws.dart';
 
 const UP = 1;
 const LEFT = 3;
@@ -7,10 +10,11 @@ const RIGHT = 5;
 const DOWN = 7;
 
 class MovableToken extends StatefulWidget {
-  final Function click;
+  // final Function click;
   final int index;
 
-  const MovableToken({Key? key, required this.click, required this.index})
+  // const MovableToken({Key? key, required this.click, required this.index})
+  const MovableToken({Key? key, required this.index})
       : super(key: key);
 
   @override
@@ -22,6 +26,8 @@ class _MovableTokenState extends State<MovableToken> {
 
   @override
   Widget build(BuildContext context) {
+    var ws = context.read<WS>();
+    var player = context.read<int>();
     return GestureDetector(
       child: MouseRegion(
         child: Container(
@@ -34,16 +40,16 @@ class _MovableTokenState extends State<MovableToken> {
                 itemBuilder: (context, index) {
                   switch (index) {
                     case UP:
-                      return ControlArrow(icon: Icons.keyboard_arrow_up_rounded, hover: hover, callback: () => widget.click(widget.index, -4),);
+                      return ControlArrow(icon: Icons.keyboard_arrow_up_rounded, hover: hover, callback: () => ws.sendJSON({ 'type': 'turn', 'params': { 'player': player, 'index': widget.index, 'direction': -4}}));
 
                     case LEFT:
-                      return ControlArrow(icon: Icons.keyboard_arrow_left_rounded, hover: hover, callback: () => widget.click(widget.index, -1),);
+                      return ControlArrow(icon: Icons.keyboard_arrow_left_rounded, hover: hover, callback: () => ws.sendJSON({ 'type': 'turn', 'params': { 'player': player, 'index': widget.index, 'direction': -1}}));
 
                     case RIGHT:
-                      return ControlArrow(icon: Icons.keyboard_arrow_right_rounded, hover: hover, callback: () => widget.click(widget.index, 1),);
+                      return ControlArrow(icon: Icons.keyboard_arrow_right_rounded, hover: hover, callback: () => ws.sendJSON({ 'type': 'turn', 'params': { 'player': player, 'index': widget.index, 'direction': 1}}));
 
                     case DOWN:
-                      return ControlArrow(icon: Icons.keyboard_arrow_down_rounded, hover: hover, callback: () => widget.click(widget.index, 4),);
+                      return ControlArrow(icon: Icons.keyboard_arrow_down_rounded, hover: hover, callback: () => ws.sendJSON({ 'type': 'turn', 'params': { 'player': player, 'index': widget.index, 'direction': 4}}));
 
                     default:
                       return const SizedBox.shrink();
@@ -66,7 +72,7 @@ class _MovableTokenState extends State<MovableToken> {
           hover = false;
         }),
       ),
-      onTap: () => widget.click(),
+      // onTap: () => widget.click(),
     );
   }
 }

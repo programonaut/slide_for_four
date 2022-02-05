@@ -8,12 +8,10 @@ import 'grid_button.dart';
 class Grid extends StatelessWidget {
   final List<int> numbers;
   final Size size;
-  final Function clickGrid;
+  // final Function clickGrid;
 
-  final circles = [0, 1, 2, 3];
-  final crosses = [4, 5, 6, 7];
-
-  Grid({required this.size, required this.numbers, required this.clickGrid});
+  // Grid({required this.size, required this.numbers, required this.clickGrid});
+  Grid({required this.size, required this.numbers});
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +26,14 @@ class Grid extends StatelessWidget {
           itemCount: numbers.length,
           itemBuilder: (context, index) {
             int currNum = numbers[index];
-            return circles.contains(currNum) || crosses.contains(currNum)
+            return currNum != 0
                 ? PlayerToken(
                     click: () => print("Dont click me!"),
                     text: "$currNum",
-                    circle: circles.contains(currNum),
+                    circle: currNum == 1,
                   )
                 : MovableToken(
-                    click: clickGrid,
+                    // click: clickGrid,
                     index: index,
                   );
           },

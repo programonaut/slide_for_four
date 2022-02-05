@@ -22,7 +22,7 @@ server.on('connection', function connection(socket) {
     const msg = JSON.parse(json);
     const type = msg.type;
     const params = msg.params;
-    console.log('received: %s', msg);
+    console.log('received: %s %s', type, params);
 
     switch (msg.type) {
       case 'create':
@@ -32,9 +32,9 @@ server.on('connection', function connection(socket) {
 
         socket.room = id;
         socket.id = 1;
-
+        
         games[id].joinGame(socket);
-
+        
         socket.sendJSON({
           type: 'init',
           params: {
@@ -58,20 +58,14 @@ server.on('connection', function connection(socket) {
             break;
           }
 
-          socket.sendJSON({
-            type: 'code',
-            params: {
-              code: params.code
-            }
-          });
-
           socket.room = params.code;
           socket.id = 2;
           
           socket.sendJSON({
             type: 'init',
             params: {
-              player: 2
+              player: 2,
+              code: params.code
             }
           });
 
@@ -94,6 +88,9 @@ server.on('connection', function connection(socket) {
   // socket.send('something');
 });
 
-WebSocket.prototype.sendJSON = function (msg) {
+WebSocket.prototype.sendJSON = async function (msg, later = false) {
+  if (later)
+    await new Promise(resolve => setTimeout(resolve, 100));
+  console.log("send", msg);
   this.send(JSON.stringify(msg));
 }

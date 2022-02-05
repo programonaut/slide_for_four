@@ -1,10 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_puzzle_hack/pages/game.dart';
 import 'package:flutter_puzzle_hack/widgets/board.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'helper/ws.dart';
 
 void main() {
   // var channel = WebSocketChannel.connect(Uri.parse("ws://localhost:3000"));
@@ -18,30 +22,29 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Puzzle Attack',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return Provider(
+      create: (_) => WS('ws://localhost:3000'),
+      child: MaterialApp(
+        title: 'Puzzle Attack',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        routes: {
+          '/': (context) => MyHomePage(
+              //channel: WebSocketChannel.connect(Uri.parse("ws://localhost:3000")),
+              ),
+          '/game': (context) => Game(),
+        },
+        initialRoute: "/",
+        // home: MyHomePage(),
+        // home: Provider(
+        //   create: (_) =>
+        //       WebSocketChannel.connect(Uri.parse("ws://localhost:3000")),
+        //   child: MyHomePage(
+        //       //channel: WebSocketChannel.connect(Uri.parse("ws://localhost:3000")),
+        //       ),
+        // ),
       ),
-      routes: {
-        '/': (context) => Provider(
-              create: (_) =>
-                  WebSocketChannel.connect(Uri.parse("ws://localhost:3000")),
-              child: MyHomePage(
-                  //channel: WebSocketChannel.connect(Uri.parse("ws://localhost:3000")),
-                  ),
-            ),
-        '/game': (context) => Board(),
-      },
-      initialRoute: "/",
-      // home: Board(),
-      // home: Provider(
-      //   create: (_) =>
-      //       WebSocketChannel.connect(Uri.parse("ws://localhost:3000")),
-      //   child: MyHomePage(
-      //       //channel: WebSocketChannel.connect(Uri.parse("ws://localhost:3000")),
-      //       ),
-      // ),
     );
   }
 }
@@ -59,25 +62,58 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _controller = new TextEditingController();
+  var waiting = false;
+  String code = '';
+  int player = -1;
 
   @override
   Widget build(BuildContext context) {
-    var channel = context.watch<WebSocketChannel>();
+    var ws = context.read<WS>();
+    final args = ModalRoute.of(context)!.settings.arguments;
     return StreamBuilder(
-        stream: channel.stream,
+        stream: ws.stream,
         builder: (context, snapshot) {
           var data = jsonDecode(snapshot.data.toString());
           print(data);
+          if (data != null) {
+            print(data["type"]);
+            switch (data["type"]) {
+              case "init":
+                code = data["params"]["code"];
+                player = data["params"]["player"];
+                waiting = true;
+                break;
+              case "start":
+              print(player);
+                WidgetsBinding.instance?.addPostFrameCallback((_) {
+                  Navigator.of(context).pushNamed(
+                    "/game",
+                    arguments: GameArguments(<int>[...data["params"]["field"]], player),
+                  );
+                });
+                break;
+              default:
+            }
+          }
           return Scaffold(
-            body: Column(
-              children: [
+            body: Column(children: [
+              if (waiting) ...[
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(),
+                ),
+                Text('Wait for player to connect'),
+                if (code != null) ...[
+                  SelectableText("${code}")
+                ]
+              ] else ...[
                 ElevatedButton(
                   onPressed: () {
-                    // Navigator.of(context).pushNamed(
-                    //   "/game",
-                    // );
-                    channel.sink
-                        .add(jsonEncode({'type': 'create', 'params': {}}));
+                    ws.sendJSON({
+                      'type': 'create',
+                      'params': {},
+                    });
                   },
                   child: Text("new"),
                 ),
@@ -89,18 +125,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    channel.sink.add(jsonEncode({
+                    ws.sendJSON({
                       'type': 'join',
                       'params': {'code': '${_controller.text}'}
-                    }));
+                    });
                   },
                   child: Text("join"),
                 ),
-                if(data != null && data["type"] == "init")... [
-                  Text("${data["params"]["code"]}")
+                if (data != null && data["type"] == "init") ...[
+                  SelectableText("${data["params"]["code"]}")
                 ]
               ],
-            ),
+            ]),
           );
         });
   }

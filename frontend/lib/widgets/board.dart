@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_puzzle_hack/widgets/grid.dart';
 
 class Board extends StatefulWidget {
-  const Board({Key? key}) : super(key: key);
+  final List<int> numbers;
+  const Board({Key? key, required this.numbers}) : super(key: key);
 
   @override
   _BoardState createState() => _BoardState();
 }
 
 class _BoardState extends State<Board> {
-  var numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-
   @override
   void initState() {
     super.initState();
-    numbers.shuffle();
   }
 
   @override
@@ -25,9 +23,9 @@ class _BoardState extends State<Board> {
       height: size.height,
       color: Colors.white,
       child: Grid(
-        numbers: numbers,
+        numbers: widget.numbers,
         size: size,
-        clickGrid: clickGrid,
+        // clickGrid: clickGrid,
       ),
     );
   }
@@ -41,9 +39,9 @@ class _BoardState extends State<Board> {
         index - 4 >= 0 ||
         index + 4 < 16 ) {
       setState(() {
-        int tmp = numbers[index + direction];
-        numbers[index + direction] = numbers[index];
-        numbers[index] = tmp;
+        int tmp = widget.numbers[index + direction];
+        widget.numbers[index + direction] = widget.numbers[index];
+        widget.numbers[index] = tmp;
       });
     }
   }
