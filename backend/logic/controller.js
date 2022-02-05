@@ -36,7 +36,7 @@ class Controller {
         });
     }
 
-    async finishGame() {
+    async checkWin() {
         this.broadcast({
             type: "win",
             params: {
@@ -51,23 +51,26 @@ class Controller {
 
         switch (type) {
             case 'turn':
-                this.field.move(params.player, params.index, params.direction);
-
-                this.broadcast({
-                    type: "turn",
-                    params: {
-                        player: 3 - params.player,
-                        field: this.field.field,
-                    }
-                });
-
-                //TODO: remove!
-                this.finishGame();
+                    this.turn();
                 break;
         
             default:
                 break;
         }
+    }
+
+    turn(params) {
+        this.field.move(params.player, params.index, params.direction);
+
+        this.broadcast({
+            type: "turn",
+            params: {
+                player: 3 - params.player,
+                field: this.field.field,
+            }
+        });
+
+        this.checkWin();
     }
 
     broadcast(msg, later) {

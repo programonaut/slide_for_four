@@ -4,6 +4,7 @@ class Field {
     //  2 = player 2
 
     constructor(width = 4) {
+        this.width = width;
         let size = width ** 2;
         this.field = [
             ...Array(size - 2 * width).fill(0),
@@ -13,6 +14,69 @@ class Field {
         this.shuffle(this.field);
     }
 
+
+    checkWin() {
+        let winner = 0;
+        // rows
+        for (let y = 0; y < this.width; y++) {
+            winner = this.checkRow(y);
+            if (winner !== 0)
+                return winner
+        }
+        // columns
+        for (let x = 0; x < this.width; x++) {
+            winner = this.checkColumn(x);
+
+            if (winner !== 0)
+            return winner
+        }
+        // diagonals
+        winner = this.checkDiagonals();
+        console.log(winner);
+    }
+
+    checkRow(row) {
+        let winner = this.field[row * this.width];
+        for (let x = 0; x < this.width; x++) {
+            if (this.field[row * this.width + x] !== winner)
+                winner = 0;
+        }
+        return winner;
+    }
+
+    checkColumn(col) {
+        let winner = this.field[col];
+        let over = this.field.filter((v, i) => {
+            if (i % this.width === col)
+            return i % this.width === col
+        }).every(v => v === winner)
+        if (over)
+            return winner;
+        return 0;
+    }
+
+    // idx = 0 or this.width
+    checkDiagonals() {
+        // lr
+        let winner = this.field[0];
+        for (let i = 0; i < this.width; i++) {
+            if (this.field[i * (this.width + 1)] !== winner)
+                winner == 0;
+        }
+
+        if (winner !== 0)
+            return winner;
+        // rl
+        winner = this.field[this.width - 1];
+        for (let i = 1; i < this.width + 1; i++) {
+            console.log(i * (this.width - 1))
+            if (this.field[i * (this.width - 1)] !== winner)
+                winner == 0;
+        }
+
+        return winner;
+    }
+
     /**
      * 
      * @param {int} player 
@@ -20,7 +84,6 @@ class Field {
      * @param {int} direction -1=left, +4=down, -4=up, +1=right
      * @param {object} rules 
      */
-
     move(player, index, direction, rules) {
         if (this.checkValidMove(player, index, direction, rules)) {
             let tmp = this.field[index + direction];
