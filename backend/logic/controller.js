@@ -4,17 +4,10 @@ const {
 
 class Controller {
     players = new Map();
-    turn = 1;
+    turnsCompleted = 1;
 
     constructor() {
         this.field = new Field();
-        // console.log(this.field.toString());
-
-        // this.field.move(1, 1, -1, {});
-        // console.log(this.field.toString());
-
-        // this.field.move(1, 0, 1, {});
-        // console.log(this.field.toString());
     }
 
     joinGame(socket) {
@@ -33,31 +26,20 @@ class Controller {
                 player: 1,
                 field: this.field.field,
             }
-        });
-    }
-
-    async checkWin() {
-        this.broadcast({
-            type: "win",
-            params: {
-                player: 1,
-            }
         }, true);
     }
 
-    handle(msg) {
-        const type = msg.type;
-        const params = msg.params;
-
-        switch (type) {
-            case 'turn':
-                    this.turn();
-                break;
-        
-            default:
-                break;
+    async checkWin(player) {
+        if (player == this.field.checkWin()) {
+            this.broadcast({
+                type: "win",
+                params: {
+                    player: player,
+                }
+            }, true);
         }
     }
+
 
     turn(params) {
         this.field.move(params.player, params.index, params.direction);
@@ -70,7 +52,7 @@ class Controller {
             }
         });
 
-        this.checkWin();
+        this.checkWin(params.player);
     }
 
     broadcast(msg, later) {
@@ -82,6 +64,20 @@ class Controller {
 
     printPlayers() {
         this.players.forEach(val => console.log(val.id));
+    }
+
+    handle(msg) {
+        const type = msg.type;
+        const params = msg.params;
+
+        switch (type) {
+            case 'turn':
+                this.turn(params);
+            break;
+        
+            default:
+            break;
+        }
     }
 }
 

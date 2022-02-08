@@ -1,10 +1,10 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_puzzle_hack/helper/ws.dart';
 import 'package:flutter_puzzle_hack/widgets/board.dart';
 import 'package:provider/provider.dart';
+
+import '../helper/ws.dart';
 
 class GameArguments {
   final List<int> field;
@@ -13,32 +13,41 @@ class GameArguments {
   GameArguments(this.field, this.player);
 }
 
-class Game extends StatelessWidget {
-  const Game({Key? key}) : super(key: key);
+class Game extends StatefulWidget {
+  static const path = "/game";
+  Game({Key? key}) : super(key: key);
+
+  @override
+  State<Game> createState() => _GameState();
+}
+
+class _GameState extends State<Game> {
+  var field;
 
   @override
   Widget build(BuildContext context) {
-    var ws = context.watch<WS>();
+    var ws = context.read<WS>();
     final args = (ModalRoute.of(context)!.settings.arguments as GameArguments);
-    var field = args.field;
-    print(args.player);
-    return Provider.value(
-      value: args.player,
-      child: StreamBuilder(
-        stream: ws.stream,
-        builder: (context, snapshot) {
-          var data = jsonDecode(snapshot.data.toString());
-          if (data != null && data["params"]["field"] != null)
+
+    return StreamBuilder(
+      stream: ws.stream,
+      builder: (context, snapshot) {
+        var data = jsonDecode(snapshot.data.toString());
+        print(data);
+        if (data != null) {
+          if (data["type"] == "turn") {
             field = <int>[...data["params"]["field"]];
-          if (data != null && data["type"] == "win") {
+          } else if (data["type"] == "win") {
             var win = data["params"]["player"];
             return AlertDialog(
-              title: Text(args.player == win ? "Winner" : "Looser"),
+              title: Text(ws.player == win ? "Winner" : "Looser"),
             );
           }
-          return Board(numbers: field);
-        },
-      ),
+        } else {
+          field = args.field;
+        }
+        return Board(numbers: field);
+      },
     );
   }
 }

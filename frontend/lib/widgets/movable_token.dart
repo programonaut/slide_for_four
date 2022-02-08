@@ -14,8 +14,7 @@ class MovableToken extends StatefulWidget {
   final int index;
 
   // const MovableToken({Key? key, required this.click, required this.index})
-  const MovableToken({Key? key, required this.index})
-      : super(key: key);
+  const MovableToken({Key? key, required this.index}) : super(key: key);
 
   @override
   State<MovableToken> createState() => _MovableTokenState();
@@ -27,7 +26,7 @@ class _MovableTokenState extends State<MovableToken> {
   @override
   Widget build(BuildContext context) {
     var ws = context.read<WS>();
-    var player = context.read<int>();
+    var player = ws.player;
     return GestureDetector(
       child: MouseRegion(
         child: Container(
@@ -40,16 +39,44 @@ class _MovableTokenState extends State<MovableToken> {
                 itemBuilder: (context, index) {
                   switch (index) {
                     case UP:
-                      return ControlArrow(icon: Icons.keyboard_arrow_up_rounded, hover: hover, callback: () => ws.sendJSON({ 'type': 'turn', 'params': { 'player': player, 'index': widget.index, 'direction': -4}}));
+                      return ControlArrow(
+                          icon: Icons.keyboard_arrow_up_rounded,
+                          hover: hover,
+                          callback: () => ws.sendJSON('turn', {
+                                'player': player,
+                                'index': widget.index,
+                                'direction': -4
+                              }));
 
                     case LEFT:
-                      return ControlArrow(icon: Icons.keyboard_arrow_left_rounded, hover: hover, callback: () => ws.sendJSON({ 'type': 'turn', 'params': { 'player': player, 'index': widget.index, 'direction': -1}}));
+                      return ControlArrow(
+                          icon: Icons.keyboard_arrow_left_rounded,
+                          hover: hover,
+                          callback: () => ws.sendJSON('turn', {
+                                'player': player,
+                                'index': widget.index,
+                                'direction': -1
+                              }));
 
                     case RIGHT:
-                      return ControlArrow(icon: Icons.keyboard_arrow_right_rounded, hover: hover, callback: () => ws.sendJSON({ 'type': 'turn', 'params': { 'player': player, 'index': widget.index, 'direction': 1}}));
+                      return ControlArrow(
+                          icon: Icons.keyboard_arrow_right_rounded,
+                          hover: hover,
+                          callback: () => ws.sendJSON('turn', {
+                                'player': player,
+                                'index': widget.index,
+                                'direction': 1
+                              }));
 
                     case DOWN:
-                      return ControlArrow(icon: Icons.keyboard_arrow_down_rounded, hover: hover, callback: () => ws.sendJSON({ 'type': 'turn', 'params': { 'player': player, 'index': widget.index, 'direction': 4}}));
+                      return ControlArrow(
+                          icon: Icons.keyboard_arrow_down_rounded,
+                          hover: hover,
+                          callback: () => ws.sendJSON('turn', {
+                                'player': player,
+                                'index': widget.index,
+                                'direction': 4
+                              }));
 
                     default:
                       return const SizedBox.shrink();
@@ -57,12 +84,11 @@ class _MovableTokenState extends State<MovableToken> {
                 }),
           ),
           decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                    color: Colors.black,
-                ),
-                borderRadius: BorderRadius.circular(5)
-          ),
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.black,
+              ),
+              borderRadius: BorderRadius.circular(5)),
         ),
         // TODO: rework
         onEnter: (details) => setState(() {
@@ -80,7 +106,9 @@ class _MovableTokenState extends State<MovableToken> {
 class ControlArrow extends StatefulWidget {
   const ControlArrow({
     Key? key,
-    required this.hover, required this.icon, this.callback,
+    required this.hover,
+    required this.icon,
+    this.callback,
   }) : super(key: key);
 
   final bool hover;
@@ -99,22 +127,19 @@ class _ControlArrowState extends State<ControlArrow> {
     Color col = Colors.white;
     if (!widget.hover) {
       col = Colors.white;
-    }
-    else if(widget.hover && !individualHover) {
+    } else if (widget.hover && !individualHover) {
       col = Colors.grey;
-    }
-    else {
+    } else {
       col = Colors.black;
     }
 
     return GestureDetector(
-      onTap: widget.callback != null ? () => widget.callback!() : () => print("Assign a method here!"),
+      onTap: widget.callback != null
+          ? () => widget.callback!()
+          : () => print("Assign a method here!"),
       child: MouseRegion(
         child: Container(
-          child: Icon(
-            widget.icon,
-            color: col
-          ),
+          child: Icon(widget.icon, color: col),
         ),
         onEnter: (details) => setState(() {
           individualHover = true;
