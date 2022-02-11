@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../helper/ws.dart';
 import 'pages.dart';
 
 class Menu extends StatelessWidget {
@@ -29,9 +31,13 @@ class Menu extends StatelessWidget {
             SizedBox(
               width: width,
               child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pushNamed(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
                     GameSelect.path,
-                  ),
+                  );
+                  var ws = context.read<WS>();
+                  ws.connect();
+                },
                 child: Text("Multiplayer"),
               ),
             ),

@@ -5,25 +5,58 @@ const {
 class Controller {
     players = new Map();
     turnsCompleted = 1;
+    activePlayer = 0;
 
     constructor() {
         this.field = new Field();
     }
 
+    leaveGame(socket) {
+        this.players.delete(socket.id);
+    }
+
+    getPlayer() {
+        let availablePlayers = [1, 2];
+
+        this.players.forEach((val) => {
+            delete availablePlayers[availablePlayers.indexOf(val.id)];
+        });
+
+        return availablePlayers.filter(val => val !== undefined)[0];
+    }
+
     joinGame(socket) {
         this.players.set(socket.id, socket);
-        this.printPlayers();
 
         if (this.players.size == 2) {
             this.startGame();
         }
     }
 
+    rejoinGame(socket) {
+        this.players.set(socket.id, socket);
+
+        if (this.players.size == 2) {
+            this.continueGame();
+        }
+    }
+
     startGame() {
+        this.activePlayer = 1;
         this.broadcast({
             type: "start",
             params: {
-                player: 1,
+                player: this.activePlayer,
+                field: this.field.field,
+            }
+        }, true);
+    }
+
+    continueGame() {
+        this.broadcast({
+            type: "start",
+            params: {
+                player: this.activePlayer,
                 field: this.field.field,
             }
         }, true);
@@ -40,14 +73,25 @@ class Controller {
         }
     }
 
+    validMove(params) {
+        if(params !== null && params["player"] !== null && params["player"] !== this.activePlayer)
+            return false;
+        return true;
+    }
+
 
     turn(params) {
+        if (!this.validMove(params))
+            return;
+
         this.field.move(params.player, params.index, params.direction);
+
+        this.activePlayer = 3 - params.player;
 
         this.broadcast({
             type: "turn",
             params: {
-                player: 3 - params.player,
+                player: this.activePlayer,
                 field: this.field.field,
             }
         });

@@ -28,7 +28,6 @@ class _GameState extends State<Game> {
   Widget build(BuildContext context) {
     var ws = context.read<WS>();
     final args = (ModalRoute.of(context)!.settings.arguments as GameArguments);
-
     return StreamBuilder(
       stream: ws.stream,
       builder: (context, snapshot) {

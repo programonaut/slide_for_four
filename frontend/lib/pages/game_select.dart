@@ -5,11 +5,24 @@ import 'package:provider/provider.dart';
 import '../helper/ws.dart';
 import 'pages.dart';
 
-class GameSelect extends StatelessWidget {
+class GameSelect extends StatefulWidget {
   GameSelect({Key? key}) : super(key: key);
-  final double width = 200;
-  final TextEditingController _controller = TextEditingController();
   static const String path = '/mp-select';
+
+  @override
+  State<GameSelect> createState() => _GameSelectState();
+}
+
+class _GameSelectState extends State<GameSelect> {
+  final double width = 200;
+
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<WS>(context, listen: false).connect();
+  }
 
   createGame(ws) {
     ws.sendJSON('create', {});
@@ -19,33 +32,54 @@ class GameSelect extends StatelessWidget {
     ws.sendJSON('join', {'code': '${_controller.text}'});
   }
 
+  reconnect(ws) {
+    ws.sendJSON('reconnect', {'code': '${_controller.text}'});
+  }
+
   @override
   Widget build(BuildContext context) {
     var ws = context.read<WS>();
-    ws.connect();
+    // Provider.of<WS>(context, listen: false).connect();
 
     return Scaffold(
       body: Center(
-          child: StreamBuilder(
-              stream: ws.stream,
-              builder: (context, snapshot) {
-                var data = jsonDecode(snapshot.data.toString());
-                print(data);
-                if (data != null && data["type"] == "init") {
-                  var params = data["params"];
-                  ws.setInit(params["player"], params["code"]);
-                  return waiting(ws);
-                } else if (data != null && data["type"] == "start") {
-                  WidgetsBinding.instance?.addPostFrameCallback(
-                    (_) => Navigator.of(context).pushNamed(
-                    Game.path,
-                    arguments: GameArguments(<int>[...data["params"]["field"]], data["params"]["player"])
-                  ));
-                  return waiting(ws);
-                } else {
-                  return selection(ws);
-                }
-              })),
+        child: StreamBuilder(
+          stream: Provider.of<WS>(context).stream,
+          builder: (context, snapshot) {
+            var data = jsonDecode(snapshot.data.toString());
+            print("select $data");
+            var widget;
+            if (data != null && data["type"] == "init") {
+              var params = data["params"];
+              ws.setInit(params["player"], params["code"]);
+              widget = waiting(ws, context);
+            } else if (data != null && data["type"] == "start") {
+              WidgetsBinding.instance?.addPostFrameCallback((_) =>
+                  Navigator.of(context).pushReplacementNamed(Game.path,
+                      arguments: GameArguments(
+                          <int>[...data["params"]["field"]],
+                          data["params"]["player"])));
+              widget = waiting(ws, context);
+            } else {
+              widget =  selection(ws);
+            }
+
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                widget,
+                Text("${Provider.of<WS>(context).state}"),
+                if (ws.state == WsState.DISCONNECTED) ...[
+                  ElevatedButton(
+                    onPressed: () => ws.connect(),
+                    child: Text("Reconnect"),
+                  ),
+                ],
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -80,11 +114,18 @@ class GameSelect extends StatelessWidget {
             child: Text("Join Game"),
           ),
         ),
+        SizedBox(
+          width: width,
+          child: ElevatedButton(
+            onPressed: () => reconnect(ws),
+            child: Text("Reconnect Game"),
+          ),
+        ),
       ],
     );
   }
 
-  Widget waiting(ws) {
+  Widget waiting(ws, context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -97,7 +138,7 @@ class GameSelect extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Text('Wait for player to connect'),
         ),
-        if (ws.room != null) ...[SelectableText("${ws.room}")]
+        if (ws.room != null) ...[SelectableText("${ws.room}")],
       ],
     );
   }

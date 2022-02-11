@@ -12,7 +12,7 @@ class PuzzleHack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return ChangeNotifierProvider(
       create: (context) => WS("ws://localhost:3000"),
       child: MaterialApp(
         title: 'Flutter Puzzle Hack',
@@ -25,7 +25,7 @@ class PuzzleHack extends StatelessWidget {
           GameSelect.path: (_) => GameSelect(),
           Game.path: (_) => Game()
         },
-        initialRoute: GameSelect.path,
+        initialRoute: Menu.path,
       ),
     );
   }
