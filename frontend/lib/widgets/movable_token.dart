@@ -40,7 +40,8 @@ class _MovableTokenState extends State<MovableToken> {
                   switch (index) {
                     case UP:
                       return ControlArrow(
-                          icon: Icons.keyboard_arrow_up_rounded,
+                          img: AssetImage(
+                              "assets/images/field-navigation-up.png"),
                           hover: hover,
                           callback: () => ws.sendJSON('turn', {
                                 'player': player,
@@ -50,7 +51,8 @@ class _MovableTokenState extends State<MovableToken> {
 
                     case LEFT:
                       return ControlArrow(
-                          icon: Icons.keyboard_arrow_left_rounded,
+                          img: AssetImage(
+                              "assets/images/field-navigation-le.png"),
                           hover: hover,
                           callback: () => ws.sendJSON('turn', {
                                 'player': player,
@@ -60,7 +62,8 @@ class _MovableTokenState extends State<MovableToken> {
 
                     case RIGHT:
                       return ControlArrow(
-                          icon: Icons.keyboard_arrow_right_rounded,
+                          img: AssetImage(
+                              "assets/images/field-navigation-ri.png"),
                           hover: hover,
                           callback: () => ws.sendJSON('turn', {
                                 'player': player,
@@ -70,7 +73,8 @@ class _MovableTokenState extends State<MovableToken> {
 
                     case DOWN:
                       return ControlArrow(
-                          icon: Icons.keyboard_arrow_down_rounded,
+                          img: AssetImage(
+                              "assets/images/field-navigation-do.png"),
                           hover: hover,
                           callback: () => ws.sendJSON('turn', {
                                 'player': player,
@@ -83,12 +87,6 @@ class _MovableTokenState extends State<MovableToken> {
                   }
                 }),
           ),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.black,
-              ),
-              borderRadius: BorderRadius.circular(5)),
         ),
         // TODO: rework
         onEnter: (details) => setState(() {
@@ -107,12 +105,12 @@ class ControlArrow extends StatefulWidget {
   const ControlArrow({
     Key? key,
     required this.hover,
-    required this.icon,
+    required this.img,
     this.callback,
   }) : super(key: key);
 
   final bool hover;
-  final IconData icon;
+  final AssetImage img;
   final Function? callback;
 
   @override
@@ -126,7 +124,7 @@ class _ControlArrowState extends State<ControlArrow> {
   Widget build(BuildContext context) {
     Color col = Colors.white;
     if (!widget.hover) {
-      col = Colors.white;
+      col = Colors.transparent;
     } else if (widget.hover && !individualHover) {
       col = Colors.grey;
     } else {
@@ -139,7 +137,7 @@ class _ControlArrowState extends State<ControlArrow> {
           : () => print("Assign a method here!"),
       child: MouseRegion(
         child: Container(
-          child: Icon(widget.icon, color: col),
+          child: ImageIcon(widget.img, color: col),
         ),
         onEnter: (details) => setState(() {
           individualHover = true;

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../helper/ws.dart';
@@ -42,43 +41,48 @@ class _GameSelectState extends State<GameSelect> {
     // Provider.of<WS>(context, listen: false).connect();
 
     return Scaffold(
-      body: Center(
-        child: StreamBuilder(
-          stream: Provider.of<WS>(context).stream,
-          builder: (context, snapshot) {
-            var data = jsonDecode(snapshot.data.toString());
-            print("select $data");
-            var widget;
-            if (data != null && data["type"] == "init") {
-              var params = data["params"];
-              ws.setInit(params["player"], params["code"]);
-              widget = waiting(ws, context);
-            } else if (data != null && data["type"] == "start") {
-              WidgetsBinding.instance?.addPostFrameCallback((_) =>
-                  Navigator.of(context).pushReplacementNamed(Game.path,
-                      arguments: GameArguments(
-                          <int>[...data["params"]["field"]],
-                          data["params"]["player"])));
-              widget = waiting(ws, context);
-            } else {
-              widget =  selection(ws);
-            }
+      body: Stack(
+        children: [
+          Image(image: AssetImage('assets/images/field-background.png'), width: 1920, height: 1080, repeat: ImageRepeat.repeat, fit: BoxFit.cover,),
+          Center(
+            child: StreamBuilder(
+              stream: Provider.of<WS>(context).stream,
+              builder: (context, snapshot) {
+                var data = jsonDecode(snapshot.data.toString());
+                print("select $data");
+                var widget;
+                if (data != null && data["type"] == "init") {
+                  var params = data["params"];
+                  ws.setInit(params["player"], params["code"]);
+                  widget = waiting(ws, context);
+                } else if (data != null && data["type"] == "start") {
+                  WidgetsBinding.instance?.addPostFrameCallback((_) =>
+                      Navigator.of(context).pushReplacementNamed(Game.path,
+                          arguments: GameArguments(
+                              <int>[...data["params"]["field"]],
+                              data["params"]["player"])));
+                  widget = waiting(ws, context);
+                } else {
+                  widget =  selection(ws);
+                }
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                widget,
-                Text("${Provider.of<WS>(context).state}"),
-                if (ws.state == WsState.DISCONNECTED) ...[
-                  ElevatedButton(
-                    onPressed: () => ws.connect(),
-                    child: Text("Reconnect"),
-                  ),
-                ],
-              ],
-            );
-          },
-        ),
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    widget,
+                    Text("${Provider.of<WS>(context).state}"),
+                    if (ws.state == WsState.DISCONNECTED) ...[
+                      ElevatedButton(
+                        onPressed: () => ws.connect(),
+                        child: Text("Reconnect"),
+                      ),
+                    ],
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -23,7 +23,8 @@ class PuzzleHack extends StatelessWidget {
           // intial
           Menu.path: (_) => Menu(),
           GameSelect.path: (_) => GameSelect(),
-          Game.path: (_) => Game()
+          Game.path: (_) => Game(),
+          GameSP.path: (_) => GameSP(),
         },
         initialRoute: Menu.path,
       ),

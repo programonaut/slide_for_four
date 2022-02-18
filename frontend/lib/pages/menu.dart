@@ -21,7 +21,9 @@ class Menu extends StatelessWidget {
             SizedBox(
               width: width,
               child: ElevatedButton(
-                onPressed: () => print("singleplayer not implemented yet"),
+                onPressed: () => Navigator.of(context).pushReplacementNamed(
+                  GameSP.path,
+                ),
                 child: Text("Singleplayer"),
               ),
             ),
@@ -31,13 +33,10 @@ class Menu extends StatelessWidget {
             SizedBox(
               width: width,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () => 
                   Navigator.of(context).pushNamed(
                     GameSelect.path,
-                  );
-                  var ws = context.read<WS>();
-                  ws.connect();
-                },
+                  ),
                 child: Text("Multiplayer"),
               ),
             ),

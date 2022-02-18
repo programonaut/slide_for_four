@@ -10,7 +10,6 @@ class Board extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Container(
       height: size.height,
-      color: Colors.white,
       child: Grid(
         numbers: numbers,
         size: size,

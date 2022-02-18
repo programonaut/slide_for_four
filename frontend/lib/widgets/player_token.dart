@@ -1,33 +1,31 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class PlayerToken extends StatelessWidget {
-  final Function click;
-  final String text;
+  final int index;
   final bool circle;
 
   const PlayerToken(
-      {Key? key, required this.click, required this.text, required this.circle})
+      {Key? key, required this.index, required this.circle})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    var rand = Random().nextInt(4) + 1;
+    return Center(
       child: Container(
-        child: Center(
-          child: Icon(
-            circle ? Icons.circle_outlined : Icons.close,
-            color: circle ? Colors.red : Colors.blue,
-            size: 64,
-          ),
-        ),
         decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-              color: Colors.black,
-            ),
-            borderRadius: BorderRadius.circular(5)),
+        image: DecorationImage(
+          image: circle ? AssetImage("assets/images/field-circle-$rand.png") : AssetImage("assets/images/field-cross-$rand.png"),
+        ),
       ),
-      onTap: () => click(),
+        // child: Icon(
+        //   circle ? Icons.circle_outlined : Icons.close,
+        //   color: circle ? Colors.red : Colors.blue,
+        //   size: 64,
+        // ),
+      ),
     );
   }
 }
