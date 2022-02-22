@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle_hack/helper/ws.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'pages/pages.dart';
 
@@ -16,8 +17,13 @@ class PuzzleHack extends StatelessWidget {
       create: (context) => WS("ws://localhost:3000"),
       child: MaterialApp(
         title: 'Flutter Puzzle Hack',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          textTheme: GoogleFonts.gloriaHallelujahTextTheme(
+            Theme.of(context).textTheme.apply(
+                  bodyColor: Colors.black,
+                ), // If this is not set, then ThemeData.light().textTheme is used.
+          ),
         ),
         routes: {
           // intial

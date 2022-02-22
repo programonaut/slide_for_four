@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider:
   web_socket_channel:
+  google_fonts:
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,13 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
+  #   - family: Caveat
+  #     fonts:
+  #       - asset: fonts/Caveat-Regular.ttf
+  #       - asset: fonts/Caveat-Italic.ttf
+  #         style: italic
+  #       - asset: fonts/Caveat-Bold.ttf
+  #         weight: 500
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

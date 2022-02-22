@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_puzzle_hack/widgets/menu_button.dart';
 import 'package:provider/provider.dart';
 import '../helper/ws.dart';
 import 'pages.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GameSelect extends StatefulWidget {
   GameSelect({Key? key}) : super(key: key);
@@ -43,7 +45,6 @@ class _GameSelectState extends State<GameSelect> {
     return Scaffold(
       body: Stack(
         children: [
-          Image(image: AssetImage('assets/images/field-background.png'), width: 1920, height: 1080, repeat: ImageRepeat.repeat, fit: BoxFit.cover,),
           Center(
             child: StreamBuilder(
               stream: Provider.of<WS>(context).stream,
@@ -63,25 +64,39 @@ class _GameSelectState extends State<GameSelect> {
                               data["params"]["player"])));
                   widget = waiting(ws, context);
                 } else {
-                  widget =  selection(ws);
+                  widget = selection(ws);
                 }
 
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    widget,
-                    Text("${Provider.of<WS>(context).state}"),
-                    if (ws.state == WsState.DISCONNECTED) ...[
-                      ElevatedButton(
-                        onPressed: () => ws.connect(),
-                        child: Text("Reconnect"),
-                      ),
-                    ],
-                  ],
+                return Center(
+                  child: widget,
                 );
               },
             ),
           ),
+          Positioned(
+            top: 20,
+            right: 20,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (ws.state == WsState.DISCONNECTED) ...[
+                  MenuButton(
+                    onPressed: () => ws.connect(),
+                    text: "Connect",
+                    fontSize: 16,
+                  ),
+                ],
+                SizedBox.square(
+                    dimension: 30,
+                    child: ImageIcon(
+                      AssetImage("assets/images/field-circle-1.png"),
+                      color: ws.state == WsState.DISCONNECTED
+                          ? Colors.red
+                          : Colors.green,
+                    )),
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -92,38 +107,32 @@ class _GameSelectState extends State<GameSelect> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(
-          width: width,
-          child: ElevatedButton(
-            onPressed: () => createGame(ws),
-            child: Text("Create Game"),
-          ),
+        MenuButton(
+          onPressed: () => createGame(ws),
+          text: "Create",
+          fontSize: 36,
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: SizedBox(
-            width: width,
-            child: TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                hintText: 'Type something',
-              ),
-            ),
-          ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+        //   child: SizedBox(
+        //     width: width,
+        //     child: TextField(
+        //       controller: _controller,
+        //       decoration: InputDecoration(
+        //         hintText: 'Type something',
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        MenuButton(
+          onPressed: () => joinGame(ws),
+          text: "Join",
+          fontSize: 36,
         ),
-        SizedBox(
-          width: width,
-          child: ElevatedButton(
-            onPressed: () => joinGame(ws),
-            child: Text("Join Game"),
-          ),
-        ),
-        SizedBox(
-          width: width,
-          child: ElevatedButton(
-            onPressed: () => reconnect(ws),
-            child: Text("Reconnect Game"),
-          ),
+        MenuButton(
+          onPressed: () => reconnect(ws),
+          text: "Reconnect",
+          fontSize: 36,
         ),
       ],
     );
@@ -140,9 +149,17 @@ class _GameSelectState extends State<GameSelect> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Text('Wait for player to connect'),
+          child: Text(
+            'Wait for player to connect',
+            style: TextStyle(fontSize: 32),
+          ),
         ),
-        if (ws.room != null) ...[SelectableText("${ws.room}")],
+        if (ws.room != null) ...[
+          SelectableText(
+            "Code: ${ws.room}",
+            style: TextStyle(fontSize: 26),
+          )
+        ],
       ],
     );
   }

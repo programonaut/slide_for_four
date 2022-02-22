@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/ws.dart';
+import '../widgets/menu_button.dart';
 import 'pages.dart';
 
 class Menu extends StatelessWidget {
@@ -15,30 +16,22 @@ class Menu extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              width: width,
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pushReplacementNamed(
-                  GameSP.path,
-                ),
-                child: Text("Singleplayer"),
+            MenuButton(
+              text: "Singleplayer",
+              onPressed: () => Navigator.of(context).pushNamed(
+                GameSP.path,
               ),
+              fontSize: 48,
             ),
-            SizedBox(
-              height: width / 2,
-            ),
-            SizedBox(
-              width: width,
-              child: ElevatedButton(
-                onPressed: () => 
-                  Navigator.of(context).pushNamed(
-                    GameSelect.path,
-                  ),
-                child: Text("Multiplayer"),
+            MenuButton(
+              text: "Multiplayer",
+              onPressed: () => Navigator.of(context).pushNamed(
+                GameSelect.path,
               ),
+              fontSize: 48,
             ),
           ],
         ),

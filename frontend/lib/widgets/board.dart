@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle_hack/widgets/grid.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Board extends StatelessWidget {
   final List<int> numbers;
@@ -8,13 +9,16 @@ class Board extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Container(
-      height: size.height,
-      child: Grid(
-        numbers: numbers,
-        size: size,
-        // clickGrid: clickGrid,
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text("It's your turn!", style: GoogleFonts.gloriaHallelujah(fontSize: 36,),),
+        Grid(
+          numbers: numbers,
+          size: size,
+          // clickGrid: clickGrid,
+        ),
+      ],
     );
   }
 }
