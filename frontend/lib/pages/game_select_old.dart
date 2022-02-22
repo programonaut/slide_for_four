@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../helper/ws.dart';
 import 'pages.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../widgets/connection_visualization.dart';
 
 class GameSelect extends StatefulWidget {
   GameSelect({Key? key}) : super(key: key);
@@ -47,10 +46,57 @@ class _GameSelectState extends State<GameSelect> {
       body: Stack(
         children: [
           Center(
-            child: selection(ws),
+            child: StreamBuilder(
+              stream: Provider.of<WS>(context).stream,
+              builder: (context, snapshot) {
+                var data = jsonDecode(snapshot.data.toString());
+                print("select $data");
+                var widget;
+                if (data != null && data["type"] == "init") {
+                  var params = data["params"];
+                  ws.setInit(params["player"], params["code"]);
+                  widget = waiting(ws, context);
+                } else if (data != null && data["type"] == "start") {
+                  WidgetsBinding.instance?.addPostFrameCallback((_) =>
+                      Navigator.of(context).pushReplacementNamed(Game.path,
+                          arguments: GameArguments(
+                              <int>[...data["params"]["field"]],
+                              data["params"]["player"])));
+                  widget = waiting(ws, context);
+                } else {
+                  widget = selection(ws);
+                }
+
+                return Center(
+                  child: widget,
+                );
+              },
+            ),
           ),
-          // TODO: only pass the state
-          ConnectionVisualization(),
+          Positioned(
+            top: 20,
+            right: 20,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (ws.state == WsState.DISCONNECTED) ...[
+                  MenuButton(
+                    onPressed: () => ws.connect(),
+                    text: "Connect",
+                    fontSize: 16,
+                  ),
+                ],
+                SizedBox.square(
+                    dimension: 30,
+                    child: ImageIcon(
+                      AssetImage("assets/images/field-circle-1.png"),
+                      color: ws.state == WsState.DISCONNECTED
+                          ? Colors.red
+                          : Colors.green,
+                    )),
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -62,10 +108,7 @@ class _GameSelectState extends State<GameSelect> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         MenuButton(
-          onPressed: () {
-            createGame(ws);
-            Navigator.of(context).pushNamed(Wait.path);
-            },
+          onPressed: () => createGame(ws),
           text: "Create",
           fontSize: 36,
         ),
@@ -82,8 +125,7 @@ class _GameSelectState extends State<GameSelect> {
         //   ),
         // ),
         MenuButton(
-          // onPressed: () => joinGame(ws),
-          onPressed: () => Navigator.of(context).pushNamed(Join.path),
+          onPressed: () => joinGame(ws),
           text: "Join",
           fontSize: 36,
         ),

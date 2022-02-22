@@ -4,3 +4,4 @@ export 'game.dart';
 export 'game_sp.dart';
 export 'join.dart';
 export 'reconnect.dart';
+export 'wait.dart';

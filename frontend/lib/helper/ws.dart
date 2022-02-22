@@ -12,6 +12,7 @@ class WS extends ChangeNotifier {
   late String room = '';
   late int player = -1;
   late WsState state = WsState.DISCONNECTED;
+  late bool started = false;
 
   WS(this.uri);
 
@@ -29,13 +30,24 @@ class WS extends ChangeNotifier {
     stream.listen(
       (dynamic message) {
         var data = jsonDecode(message.toString());
+        var params = data["params"];
         print("$message");
-        if (data["type"] == "connected") {
-          print("Reconnected");
-          state = WsState.CONNECTED;
-        } else if (data["type"] == "disconnected") {
-          state = WsState.DISCONNECTED;
+        switch (data["type"]) {
+          case "connected":
+            state = WsState.CONNECTED;
+            break;
+          case "disconnected":
+            state = WsState.DISCONNECTED;
+            break;
+          case "init":
+            setInit(params["player"], params["code"]);
+            break;
+          case "start":
+            started = true;
+            break;
+          default:
         }
+        print("notify");
         notifyListeners();
       },
       onDone: () {

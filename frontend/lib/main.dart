@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle_hack/helper/ws.dart';
+import 'package:flutter_puzzle_hack/pages/wait.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'pages/pages.dart';
@@ -31,6 +32,8 @@ class PuzzleHack extends StatelessWidget {
           GameSelect.path: (_) => GameSelect(),
           Game.path: (_) => Game(),
           GameSP.path: (_) => GameSP(),
+          Wait.path: (_) => Wait(),
+          Join.path: (_) => Join(),
         },
         initialRoute: Menu.path,
       ),
