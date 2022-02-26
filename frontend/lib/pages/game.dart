@@ -66,7 +66,7 @@ class Game extends StatelessWidget {
             title: Text(ws.player == ws.winner ? "Winner" : "Looser"),
           );
         }
-        return Board(activePlayer: ws.activePlayer == ws.player, numbers: ws.field, room: ws.room, player: ws.player);
+        return Board(activePlayer: ws.activePlayer == ws.player, numbers: ws.field, room: ws.room, player: ws.player, changes: ws.changes);
       }),
     );
   }

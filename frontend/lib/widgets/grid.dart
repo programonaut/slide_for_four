@@ -8,10 +8,10 @@ import 'grid_button.dart';
 class Grid extends StatelessWidget {
   final List<int> numbers;
   final Size size;
-  // final Function clickGrid;
+  final List<bool> changes;
 
   // Grid({required this.size, required this.numbers, required this.clickGrid});
-  Grid({required this.size, required this.numbers});
+  Grid({required this.size, required this.numbers, required this.changes});
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +39,7 @@ class Grid extends StatelessWidget {
                     ? PlayerToken(
                         index: index,
                         circle: currNum == 1,
+                        changed: changes[index],
                       )
                     : MovableToken(
                         // click: clickGrid,

@@ -18,6 +18,7 @@ class WS extends ChangeNotifier {
   late WsState state = WsState.DISCONNECTED;
   late bool started = false;
   late List<int> field = [];
+  late List<bool> changes = [];
   late bool gameOver = false;
   late int winner = -1;
 
@@ -80,10 +81,18 @@ class WS extends ChangeNotifier {
     field = <int>[...params["field"]];
     activePlayer = params["player"];
     started = true;
+
+    List<int> fixedList = Iterable<int>.generate(field.length).toList();
+
+    changes = fixedList.map((i) => true).toList();
   }
 
   updateState(params) {
-    field = <int>[...params["field"]];
+    var newField = <int>[...params["field"]];
+    List<int> fixedList = Iterable<int>.generate(field.length).toList();
+
+    changes = fixedList.map((i) => field[i] != newField[i]).toList();
+    field = newField;
     activePlayer = params["player"];
   }
 

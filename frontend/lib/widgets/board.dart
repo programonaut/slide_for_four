@@ -8,54 +8,60 @@ class Board extends StatelessWidget {
   final bool activePlayer;
   final String room;
   final int player;
+  final List<bool> changes;
 
-  const Board(
-      {Key? key,
-      required this.numbers,
-      required this.activePlayer,
-      required this.room,
-      required this.player})
-      : super(key: key);
+  const Board({
+    Key? key,
+    required this.numbers,
+    required this.activePlayer,
+    required this.room,
+    required this.player,
+    required this.changes,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Stack(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              children: [
-                Text(
-                  activePlayer
-                      ? "It's your turn!"
-                      : "It's your opponents turn!",
-                  style: TextStyle(
-                    fontSize: 36,
+    return Container(
+      color: Colors.white,
+      child: Stack(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    activePlayer
+                        ? "It's your turn!"
+                        : "It's your opponents turn!",
+                    style: TextStyle(
+                      fontSize: 36,
+                    ),
                   ),
-                ),
-                Text(
-                  "You are: ${player == 1 ? "O" : "X"}",
-                  style: TextStyle(
-                    fontSize: 24,
+                  Text(
+                    "You are: ${player == 1 ? "O" : "X"}",
+                    style: TextStyle(
+                      fontSize: 24,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Grid(
-              numbers: numbers,
-              size: size,
-              // clickGrid: clickGrid,
-            ),
-            SelectableText(
-              "Room code: $room",
-              style: TextStyle(fontSize: 18),
-            ),
-          ],
-        ),
-        ConnectionVisualization(),
-      ],
+                ],
+              ),
+              Grid(
+                numbers: numbers,
+                changes: changes,
+                size: size,
+                // clickGrid: clickGrid,
+              ),
+              SelectableText(
+                "Room code: $room",
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+          ConnectionVisualization(),
+        ],
+      ),
     );
   }
 }

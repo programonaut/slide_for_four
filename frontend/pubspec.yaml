@@ -38,6 +38,7 @@ dependencies:
   web_socket_channel:
   google_fonts:
   page_transition:
+  rive:
 
 dev_dependencies:
   flutter_test:
