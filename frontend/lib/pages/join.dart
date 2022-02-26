@@ -66,7 +66,7 @@ class _JoinState extends State<Join> {
                     if (_text.length == 5) {
                       joinGame(ws);
                       SchedulerBinding.instance?.addPostFrameCallback((_) {
-                        Navigator.of(context).pushNamed(
+                        Navigator.of(context).pushReplacementNamed(
                           Wait.path,
                         );
                       });

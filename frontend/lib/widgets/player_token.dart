@@ -28,13 +28,6 @@ class _PlayerTokenState extends State<PlayerToken> {
 
   @override
   Widget build(BuildContext context) {
-    // return FittedBox(
-    //   fit: BoxFit.fitHeight,
-    //   child: Text(circle ? "O" : "X", style: TextStyle(fontWeight: FontWeight.bold),),
-    // );
-    if (widget.changed) {
-      _controller.isActive = true;
-    }
     return RiveAnimation.asset(widget.circle ? 'circle.riv' : 'cross.riv', controllers: [_controller],);
   }
 }

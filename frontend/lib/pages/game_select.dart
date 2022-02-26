@@ -24,8 +24,7 @@ class _GameSelectState extends State<GameSelect> {
   void initState() {
     super.initState();
     var ws = context.read<WS>();
-    ws.reset();
-    ws.connect();
+
   }
 
   createGame(ws) {
@@ -43,7 +42,8 @@ class _GameSelectState extends State<GameSelect> {
   @override
   Widget build(BuildContext context) {
     var ws = context.read<WS>();
-    // Provider.of<WS>(context, listen: false).connect();
+    ws.reset();
+    ws.connect();
 
     return Scaffold(
       body: Stack(
@@ -66,7 +66,7 @@ class _GameSelectState extends State<GameSelect> {
         MenuButton(
           onPressed: () {
             createGame(ws);
-            Navigator.of(context).pushNamed(Wait.path);
+            Navigator.of(context).pushReplacementNamed(Wait.path);
             },
           text: "Create",
           fontSize: 36,

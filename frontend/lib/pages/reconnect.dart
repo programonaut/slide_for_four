@@ -60,7 +60,7 @@ class _ReconnectState extends State<Reconnect> {
                 MenuButton(
                   text: "Reconnect${_text.length > 0 ? ":" : ""} $_text",
                   onPressed: () { if(_text.length == 5) {
-                      Navigator.of(context).pushNamed(
+                      Navigator.of(context).pushReplacementNamed(
                         Wait.path,
                       );
                       reconnectGame(ws);
