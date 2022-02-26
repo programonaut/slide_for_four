@@ -1,23 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_puzzle_hack/widgets/connection_visualization.dart';
 import 'package:flutter_puzzle_hack/widgets/grid.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Board extends StatelessWidget {
   final List<int> numbers;
-  const Board({Key? key, required this.numbers}) : super(key: key);
+  final bool activePlayer;
+  final String room;
+  final int player;
+
+  const Board(
+      {Key? key,
+      required this.numbers,
+      required this.activePlayer,
+      required this.room,
+      required this.player})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Stack(
       children: [
-        Text("It's your turn!", style: GoogleFonts.gloriaHallelujah(fontSize: 36,),),
-        Grid(
-          numbers: numbers,
-          size: size,
-          // clickGrid: clickGrid,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              children: [
+                Text(
+                  activePlayer
+                      ? "It's your turn!"
+                      : "It's your opponents turn!",
+                  style: TextStyle(
+                    fontSize: 36,
+                  ),
+                ),
+                Text(
+                  "You are: ${player == 1 ? "O" : "X"}",
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+              ],
+            ),
+            Grid(
+              numbers: numbers,
+              size: size,
+              // clickGrid: clickGrid,
+            ),
+            SelectableText(
+              "Room code: $room",
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
         ),
+        ConnectionVisualization(),
       ],
     );
   }

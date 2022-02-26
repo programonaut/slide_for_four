@@ -7,12 +7,19 @@ enum WsState { DISCONNECTED, INTERRUPTED, CONNECTED }
 
 class WS extends ChangeNotifier {
   late WebSocketChannel channel;
-  late Stream stream;
+
+  // game init
   late String uri;
   late String room = '';
   late int player = -1;
+  
+  // game state
+  late int activePlayer = -1;
   late WsState state = WsState.DISCONNECTED;
   late bool started = false;
+  late List<int> field = [];
+  late bool gameOver = false;
+  late int winner = -1;
 
   WS(this.uri);
 
@@ -21,17 +28,13 @@ class WS extends ChangeNotifier {
   }
 
   connect() {
-    print("connect");
     channel = WebSocketChannel.connect(Uri.parse(uri));
-    stream = channel.stream.asBroadcastStream();
-
     sendJSON("connect", {});
 
-    stream.listen(
+    channel.stream.listen(
       (dynamic message) {
         var data = jsonDecode(message.toString());
         var params = data["params"];
-        print("$message");
         switch (data["type"]) {
           case "connected":
             state = WsState.CONNECTED;
@@ -40,18 +43,23 @@ class WS extends ChangeNotifier {
             state = WsState.DISCONNECTED;
             break;
           case "init":
-            setInit(params["player"], params["code"]);
+            setInit(params);
             break;
           case "start":
-            started = true;
+            setState(params);
+            break;
+          case "turn":
+            updateState(params);
+            break;
+          case "win":
+            endState(params);
             break;
           default:
         }
-        print("notify");
         notifyListeners();
       },
+
       onDone: () {
-        print('ws channel closed');
         state = WsState.DISCONNECTED;
         notifyListeners();
       },
@@ -61,12 +69,36 @@ class WS extends ChangeNotifier {
         notifyListeners();
       },
     );
-
-    // notifyListeners();
   }
 
-  setInit(player, room) {
-    this.room = room;
-    this.player = player;
+  setInit(params) {
+    room = params["code"];
+    player = params["player"];
+  }
+
+  setState(params) {
+    field = <int>[...params["field"]];
+    activePlayer = params["player"];
+    started = true;
+  }
+
+  updateState(params) {
+    field = <int>[...params["field"]];
+    activePlayer = params["player"];
+  }
+
+  endState(params) {
+    gameOver = true;
+    winner = params["player"];
+  }
+
+  reset() {
+    room = "";
+    player = -1;
+    activePlayer = -1;
+    started = false;
+    field = [];
+    gameOver = false;
+    winner = -1;
   }
 }

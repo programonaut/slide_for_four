@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_puzzle_hack/pages/pages.dart';
 import 'package:flutter_puzzle_hack/widgets/connection_visualization.dart';
 import 'package:flutter_puzzle_hack/widgets/menu_button.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/ws.dart';
+import 'dart:html' as html;
 
 class Join extends StatefulWidget {
   static const path = "join";
@@ -24,6 +27,7 @@ class _JoinState extends State<Join> {
 
   @override
   Widget build(BuildContext context) {
+
     var ws = context.read<WS>();
     var width = MediaQuery.of(context).size.width / 4;
     return Material(
@@ -58,7 +62,16 @@ class _JoinState extends State<Join> {
                 ),
                 MenuButton(
                   text: "Join${_text.length > 0 ? ":" : ""} $_text",
-                  onPressed: () { if(_text.length == 5) joinGame(ws); },
+                  onPressed: () {
+                    if (_text.length == 5) {
+                      joinGame(ws);
+                      SchedulerBinding.instance?.addPostFrameCallback((_) {
+                        Navigator.of(context).pushNamed(
+                          Wait.path,
+                        );
+                      });
+                    }
+                  },
                   fontSize: 32,
                 )
               ],

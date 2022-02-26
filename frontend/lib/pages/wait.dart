@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_puzzle_hack/widgets/connection_visualization.dart';
 import 'package:flutter_puzzle_hack/widgets/menu_button.dart';
 import 'package:provider/provider.dart';
+import 'pages.dart';
 
 import '../helper/ws.dart';
+import 'dart:html' as html;
 
 class Wait extends StatefulWidget {
   static const path = "wait";
@@ -13,10 +17,10 @@ class Wait extends StatefulWidget {
 }
 
 class _WaitState extends State<Wait> {
-
+  var waitState = true;
   var waitText = "Wait";
   var loadState = "";
-  var curr;
+  var curr = "Wait";
 
   var startedText = "Both players connected!";
 
@@ -29,26 +33,45 @@ class _WaitState extends State<Wait> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<WS>(
-        builder: ((context, value, child) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(value.started ? startedText : curr, style: TextStyle(fontSize: 32),),
-                if (value.started) ...[
-                  MenuButton(text: "Begin!", onPressed: () => print("Connect"), fontSize: 36,),
-                ]
-              ],
-            ),
-          );
-        }),
+      body: Stack(
+        children: [
+          Consumer<WS>(
+            builder: ((context, ws, child) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      ws.started ? startedText : curr,
+                      style: TextStyle(fontSize: 32),
+                    ),
+                    SelectableText(
+                      "Room code: ${ws.room}",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    if (ws.started) ...[
+                      MenuButton(
+                        text: "Begin!",
+                        onPressed: () =>
+                            Navigator.of(context).pushReplacementNamed(
+                          Game.path,
+                        ),
+                        fontSize: 36,
+                      ),
+                    ]
+                  ],
+                ),
+              );
+            }),
+          ),
+          ConnectionVisualization(),
+        ],
       ),
     );
   }
 
   void wait() async {
-    while (true) {
+    while (waitState) {
       if (loadState.length == 3) {
         loadState = "";
       }
@@ -58,5 +81,11 @@ class _WaitState extends State<Wait> {
       });
       await Future.delayed(const Duration(seconds: 1), () {});
     }
+  }
+
+  @override
+  void dispose() {
+    waitState = false;
+    super.dispose();
   }
 }

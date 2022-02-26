@@ -23,7 +23,9 @@ class _GameSelectState extends State<GameSelect> {
   @override
   void initState() {
     super.initState();
-    Provider.of<WS>(context, listen: false).connect();
+    var ws = context.read<WS>();
+    ws.reset();
+    ws.connect();
   }
 
   createGame(ws) {
@@ -88,7 +90,7 @@ class _GameSelectState extends State<GameSelect> {
           fontSize: 36,
         ),
         MenuButton(
-          onPressed: () => reconnect(ws),
+          onPressed: () => Navigator.of(context).pushNamed(Reconnect.path),
           text: "Reconnect",
           fontSize: 36,
         ),

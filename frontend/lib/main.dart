@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_puzzle_hack/helper/ws.dart';
 import 'package:flutter_puzzle_hack/pages/wait.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'pages/pages.dart';
 
@@ -26,14 +27,27 @@ class PuzzleHack extends StatelessWidget {
                 ), // If this is not set, then ThemeData.light().textTheme is used.
           ),
         ),
-        routes: {
-          // intial
-          Menu.path: (_) => Menu(),
-          GameSelect.path: (_) => GameSelect(),
-          Game.path: (_) => Game(),
-          GameSP.path: (_) => GameSP(),
-          Wait.path: (_) => Wait(),
-          Join.path: (_) => Join(),
+        // routes: {
+        //   // intial
+        //   Menu.path: (_) => Menu(),
+        //   GameSelect.path: (_) => GameSelect(),
+        //   Game.path: (_) => Game(),
+        //   GameSP.path: (_) => GameSP(),
+        //   Wait.path: (_) => Wait(),
+        //   Join.path: (_) => Join(),
+        //   Reconnect.path: (_) => Reconnect(),
+        // },
+        onGenerateRoute:(settings) {
+          switch (settings.name) {
+            case Menu.path: return PageTransition(child: Menu(), type: PageTransitionType.fade);
+            case GameSelect.path: return PageTransition(child: GameSelect(), type: PageTransitionType.fade);
+            case Game.path: return PageTransition(child: Game(), type: PageTransitionType.fade);
+            case GameSP.path: return PageTransition(child: GameSP(), type: PageTransitionType.fade);
+            case Wait.path: return PageTransition(child: Wait(), type: PageTransitionType.fade);
+            case Join.path: return PageTransition(child: Join(), type: PageTransitionType.fade);
+            case Reconnect.path: return PageTransition(child: Reconnect(), type: PageTransitionType.fade);
+            default: return PageTransition(child: Menu(), type: PageTransitionType.fade);
+          }
         },
         initialRoute: Menu.path,
       ),

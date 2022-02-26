@@ -28,7 +28,7 @@ class _GameSPState extends State<GameSP> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Board(numbers: field),
+      body: Board(activePlayer: false, numbers: field, room: "AAAAA", player:  1,),
     );
   }
 }
