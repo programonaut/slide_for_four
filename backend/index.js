@@ -153,8 +153,15 @@ server.on('connection', function connection(socket, req) {
       params: {}
     });
     // leave game
-    if (socket.room != undefined && socket.room != '')
+    if (socket.room != undefined && socket.room != '') {
       games[socket.room].leaveGame(socket);
+      if (games[socket.room].players.size == 0) {
+        delete games[socket.room];
+        console.log(games);
+      }
+
+    }
+
     // TODO: stop game
   }
 });
