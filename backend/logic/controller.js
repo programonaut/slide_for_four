@@ -63,11 +63,12 @@ class Controller {
     }
 
     async checkWin(player) {
-        if (player == this.field.checkWin()) {
+        const winner = this.field.checkWin(); 
+        if (winner !== 0) {
             this.broadcast({
                 type: "win",
                 params: {
-                    player: player,
+                    player: winner,
                 }
             }, true);
         }
