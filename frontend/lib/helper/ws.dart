@@ -97,6 +97,7 @@ class WS extends ChangeNotifier {
   }
 
   endState(params) {
+    print("Game Over");
     gameOver = true;
     winner = params["player"];
   }

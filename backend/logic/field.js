@@ -32,7 +32,7 @@ class Field {
         }
         // diagonals
         winner = this.checkDiagonals();
-        console.log(winner);
+        return winner;
     }
 
     checkRow(row) {
@@ -55,13 +55,13 @@ class Field {
         return 0;
     }
 
-    // idx = 0 or this.width
+    // diag = 0 or diag = 1
     checkDiagonals() {
         // lr
         let winner = this.field[0];
         for (let i = 0; i < this.width; i++) {
             if (this.field[i * (this.width + 1)] !== winner)
-                winner == 0;
+                winner = 0;
         }
 
         if (winner !== 0)
@@ -69,9 +69,8 @@ class Field {
         // rl
         winner = this.field[this.width - 1];
         for (let i = 1; i < this.width + 1; i++) {
-            console.log(i * (this.width - 1))
             if (this.field[i * (this.width - 1)] !== winner)
-                winner == 0;
+                winner = 0;
         }
 
         return winner;
