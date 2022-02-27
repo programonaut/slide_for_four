@@ -42,7 +42,7 @@ class Controller {
     }
 
     startGame() {
-        this.activePlayer = 1;
+        this.activePlayer = 2;
         this.broadcast({
             type: "start",
             params: {
