@@ -33,40 +33,44 @@ class _GridState extends State<Grid> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: GridView.builder(
-              //TODO: dynamic
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4
-                      //, mainAxisSpacing: 5, crossAxisSpacing: 5
-                      ),
-              //TODO: dynamic
-              itemCount: widget.numbers.length,
-              itemBuilder: (context, index) {
-                int currNum = widget.numbers[index];
-                return Stack(
-                  children: [
-                    if (highlighted == index) ...[
-                      Image(
-                        image: AssetImage("assets/images/field-circle-2.png"),
-                        color: Colors.yellow[700],
-                      ),
+            child: Container(
+              child: GridView.builder(
+                //TODO: dynamic
+                gridDelegate:
+                    SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4
+                        //, mainAxisSpacing: 5, crossAxisSpacing: 5
+                        ),
+                //TODO: dynamic
+                itemCount: widget.numbers.length,
+                itemBuilder: (context, index) {
+                  int currNum = widget.numbers[index];
+                  return Stack(
+                    children: [
+                      if (highlighted == index) ...[
+                        Center(
+                          child: Image(
+                            image: AssetImage("assets/images/highlight.png"),
+                            color: Colors.yellow[700],
+                          ),
+                        ),
+                      ],
+                      if (currNum != 0) ...[
+                        PlayerToken(
+                          index: index,
+                          circle: currNum == 1,
+                          changed: widget.changes[index],
+                        ),
+                      ] else ...[
+                        MovableToken(
+                          // click: clickGrid,
+                          index: index,
+                          hoverCallback: highlight,
+                        ),
+                      ],
                     ],
-                    if (currNum != 0) ...[
-                      PlayerToken(
-                        index: index,
-                        circle: currNum == 1,
-                        changed: widget.changes[index],
-                      ),
-                    ] else ...[
-                      MovableToken(
-                        // click: clickGrid,
-                        index: index,
-                        hoverCallback: highlight,
-                      ),
-                    ],
-                  ],
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),

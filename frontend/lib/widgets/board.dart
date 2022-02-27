@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle_hack/widgets/connection_visualization.dart';
 import 'package:flutter_puzzle_hack/widgets/grid.dart';
+import 'package:flutter_puzzle_hack/widgets/room_code.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Board extends StatelessWidget {
@@ -53,10 +54,7 @@ class Board extends StatelessWidget {
                 size: size,
                 // clickGrid: clickGrid,
               ),
-              SelectableText(
-                "Room code: $room",
-                style: TextStyle(fontSize: 18),
-              ),
+              RoomCode(),
             ],
           ),
           ConnectionVisualization(),

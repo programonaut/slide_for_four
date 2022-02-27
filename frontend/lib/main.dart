@@ -51,7 +51,7 @@ class PuzzleHack extends StatelessWidget {
             default: return PageTransition(child: Menu(), type: PageTransitionType.fade);
           }
         },
-        initialRoute: Wait.path,
+        initialRoute: Menu.path,
       ),
     );
   }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_puzzle_hack/widgets/connection_visualization.dart';
 import 'package:flutter_puzzle_hack/widgets/menu_button.dart';
 import 'package:provider/provider.dart';
+import '../widgets/room_code.dart';
 import 'pages.dart';
 
 import '../helper/ws.dart';
-import 'dart:html' as html;
 
 class Wait extends StatefulWidget {
   static const path = "wait";
@@ -45,10 +46,7 @@ class _WaitState extends State<Wait> {
                       ws.started ? startedText : curr,
                       style: TextStyle(fontSize: 32),
                     ),
-                    SelectableText(
-                      "Room code: ${ws.room}",
-                      style: TextStyle(fontSize: 18),
-                    ),
+                    RoomCode(),
                     if (ws.started) ...[
                       MenuButton(
                         text: "Begin!",

@@ -7,7 +7,6 @@ import 'package:flutter_puzzle_hack/widgets/menu_button.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/ws.dart';
-import 'dart:html' as html;
 
 class Join extends StatefulWidget {
   static const path = "join";
