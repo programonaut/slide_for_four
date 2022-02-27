@@ -10,6 +10,7 @@ class Board extends StatelessWidget {
   final String room;
   final int player;
   final List<bool> changes;
+  final bool hideRoom;
 
   const Board({
     Key? key,
@@ -17,7 +18,7 @@ class Board extends StatelessWidget {
     required this.activePlayer,
     required this.room,
     required this.player,
-    required this.changes,
+    required this.changes, this.hideRoom=false,
   }) : super(key: key);
 
   @override
@@ -60,7 +61,12 @@ class Board extends StatelessWidget {
                 size: size,
                 // clickGrid: clickGrid,
               ),
-              RoomCode(),
+              if (!hideRoom) ...[
+                RoomCode(),
+              ]
+              else ...[
+                SizedBox.shrink()
+              ]
             ],
           ),
           ConnectionVisualization(),

@@ -35,7 +35,7 @@ class GameOver extends StatelessWidget {
                 ws.sendJSON('disconnect', {});
                 ws.reset();
                 Navigator.of(context).pushReplacementNamed(
-                  GameSelect.path,
+                  Menu.path,
                 );
               }),
           Spacer(),

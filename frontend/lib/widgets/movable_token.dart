@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../helper/ws.dart';
 
 const UP = 1;
@@ -30,7 +31,7 @@ class _MovableTokenState extends State<MovableToken> {
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       isMobile = true;
     }
   }
@@ -45,7 +46,6 @@ class _MovableTokenState extends State<MovableToken> {
   Widget mobile(WS ws, int player) {
     return GestureDetector(
       onHorizontalDragEnd: (details) {
-        print(details);
         if (details.primaryVelocity! < 0) {
           print("left");
           ws.sendJSON('turn', {
@@ -92,9 +92,14 @@ class _MovableTokenState extends State<MovableToken> {
             ),
             itemCount: 9,
             itemBuilder: (context, index) {
+              var i = widget.index;
+              bool up = i - 4 >= 0;
+              bool left = i != 0 && i != 4 && i != 8 && i != 12;
+              bool down = i + 4 < 16;
+              bool right = i != 3 && i != 7 && i != 11 && i != 15;
               switch (index) {
                 case UP:
-                  return ControlArrow(
+                  return !up ? SizedBox.shrink() : ControlArrow(
                       img: AssetImage("assets/images/field-navigation-up.png"),
                       hover: hover || isMobile,
                       hoverCallback: () =>
@@ -107,7 +112,7 @@ class _MovableTokenState extends State<MovableToken> {
                           }));
 
                 case LEFT:
-                  return ControlArrow(
+                  return !left ? SizedBox.shrink() : ControlArrow(
                       img: AssetImage("assets/images/field-navigation-le.png"),
                       hover: hover || isMobile,
                       hoverCallback: () =>
@@ -120,7 +125,7 @@ class _MovableTokenState extends State<MovableToken> {
                           }));
 
                 case RIGHT:
-                  return ControlArrow(
+                  return !right ? SizedBox.shrink() : ControlArrow(
                       img: AssetImage("assets/images/field-navigation-ri.png"),
                       hover: hover || isMobile,
                       hoverCallback: () =>
@@ -133,7 +138,7 @@ class _MovableTokenState extends State<MovableToken> {
                           }));
 
                 case DOWN:
-                  return ControlArrow(
+                  return !down ? SizedBox.shrink() : ControlArrow(
                       img: AssetImage("assets/images/field-navigation-do.png"),
                       hover: hover || isMobile,
                       hoverCallback: () =>
