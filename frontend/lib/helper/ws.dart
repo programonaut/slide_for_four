@@ -97,12 +97,12 @@ class WS extends ChangeNotifier {
   }
 
   endState(params) {
-    print("Game Over");
     gameOver = true;
     winner = params["player"];
   }
 
   reset() {
+    print("reset");
     room = "";
     player = -1;
     activePlayer = -1;

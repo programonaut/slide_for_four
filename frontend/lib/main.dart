@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle_hack/helper/ws.dart';
+import 'package:flutter_puzzle_hack/pages/game_over.dart';
 import 'package:flutter_puzzle_hack/pages/wait.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
@@ -46,10 +47,11 @@ class PuzzleHack extends StatelessWidget {
             case Wait.path: return PageTransition(child: Wait(), type: PageTransitionType.fade);
             case Join.path: return PageTransition(child: Join(), type: PageTransitionType.fade);
             case Reconnect.path: return PageTransition(child: Reconnect(), type: PageTransitionType.fade);
+            case GameOver.path: return PageTransition(child: GameOver(), type: PageTransitionType.fade);
             default: return PageTransition(child: Menu(), type: PageTransitionType.fade);
           }
         },
-        initialRoute: Menu.path,
+        initialRoute: Wait.path,
       ),
     );
   }

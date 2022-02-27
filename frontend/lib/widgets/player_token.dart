@@ -8,7 +8,7 @@ class PlayerToken extends StatefulWidget {
   final bool circle;
   final bool changed;
 
-  const PlayerToken({Key? key, required this.index, required this.circle, required this.changed})
+  PlayerToken({Key? key, required this.index, required this.circle, required this.changed})
       : super(key: key);
 
   @override

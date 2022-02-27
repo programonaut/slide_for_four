@@ -12,9 +12,11 @@ const DOWN = 7;
 class MovableToken extends StatefulWidget {
   // final Function click;
   final int index;
+  final Function hoverCallback;
 
   // const MovableToken({Key? key, required this.click, required this.index})
-  const MovableToken({Key? key, required this.index}) : super(key: key);
+  MovableToken({Key? key, required this.index, required this.hoverCallback})
+      : super(key: key);
 
   @override
   State<MovableToken> createState() => _MovableTokenState();
@@ -43,6 +45,9 @@ class _MovableTokenState extends State<MovableToken> {
                           img: AssetImage(
                               "assets/images/field-navigation-up.png"),
                           hover: hover,
+                          hoverCallback: () =>
+                              widget.hoverCallback(widget.index - 4),
+                          hoverExitCallback: () => widget.hoverCallback(-1),
                           callback: () => ws.sendJSON('turn', {
                                 'player': player,
                                 'index': widget.index,
@@ -54,6 +59,9 @@ class _MovableTokenState extends State<MovableToken> {
                           img: AssetImage(
                               "assets/images/field-navigation-le.png"),
                           hover: hover,
+                          hoverCallback: () =>
+                              widget.hoverCallback(widget.index - 1),
+                          hoverExitCallback: () => widget.hoverCallback(-1),
                           callback: () => ws.sendJSON('turn', {
                                 'player': player,
                                 'index': widget.index,
@@ -65,6 +73,9 @@ class _MovableTokenState extends State<MovableToken> {
                           img: AssetImage(
                               "assets/images/field-navigation-ri.png"),
                           hover: hover,
+                          hoverCallback: () =>
+                              widget.hoverCallback(widget.index + 1),
+                          hoverExitCallback: () => widget.hoverCallback(-1),
                           callback: () => ws.sendJSON('turn', {
                                 'player': player,
                                 'index': widget.index,
@@ -76,6 +87,9 @@ class _MovableTokenState extends State<MovableToken> {
                           img: AssetImage(
                               "assets/images/field-navigation-do.png"),
                           hover: hover,
+                          hoverCallback: () =>
+                              widget.hoverCallback(widget.index + 4),
+                          hoverExitCallback: () => widget.hoverCallback(-1),
                           callback: () => ws.sendJSON('turn', {
                                 'player': player,
                                 'index': widget.index,
@@ -107,11 +121,15 @@ class ControlArrow extends StatefulWidget {
     required this.hover,
     required this.img,
     this.callback,
+    this.hoverCallback,
+    this.hoverExitCallback,
   }) : super(key: key);
 
   final bool hover;
   final AssetImage img;
   final Function? callback;
+  final Function? hoverCallback;
+  final Function? hoverExitCallback;
 
   @override
   State<ControlArrow> createState() => _ControlArrowState();
@@ -133,19 +151,27 @@ class _ControlArrowState extends State<ControlArrow> {
 
     return GestureDetector(
       onTap: widget.callback != null
-          ? () => widget.callback!()
+          ? () {
+              widget.callback!();
+              widget.hoverExitCallback!();
+            }
           : () => print("Assign a method here!"),
       child: MouseRegion(
-        child: Container(
-          child: ImageIcon(widget.img, color: col),
-        ),
-        onEnter: (details) => setState(() {
-          individualHover = true;
-        }),
-        onExit: (details) => setState(() {
-          individualHover = false;
-        }),
-      ),
+          child: Container(
+            child: ImageIcon(widget.img, color: col),
+          ),
+          onEnter: (details) {
+            setState(() {
+              individualHover = true;
+            });
+            widget.hoverCallback!();
+          },
+          onExit: (details) {
+            setState(() {
+              individualHover = false;
+            });
+            widget.hoverExitCallback!();
+          }),
     );
   }
 }

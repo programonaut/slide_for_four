@@ -62,11 +62,18 @@ class Game extends StatelessWidget {
     return Scaffold(
       body: Consumer<WS>(builder: (context, ws, child) {
         if (ws.gameOver) {
-          return AlertDialog(
-            title: Text(ws.player == ws.winner ? "Winner" : "Looser"),
-          );
+          SchedulerBinding.instance?.addPostFrameCallback((_) {
+            Navigator.of(context).pushReplacementNamed(
+              GameOver.path,
+            );
+          });
         }
-        return Board(activePlayer: ws.activePlayer == ws.player, numbers: ws.field, room: ws.room, player: ws.player, changes: ws.changes);
+        return Board(
+            activePlayer: ws.activePlayer == ws.player,
+            numbers: ws.field,
+            room: ws.room,
+            player: ws.player,
+            changes: ws.changes);
       }),
     );
   }
