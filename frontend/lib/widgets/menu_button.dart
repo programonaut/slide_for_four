@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MenuButton extends StatelessWidget {
   final text;
   final onPressed;
-  final fontSize;
+  final double? fontSize;
 
   const MenuButton({
     Key? key,
@@ -21,7 +21,7 @@ class MenuButton extends StatelessWidget {
             (Set<MaterialState> states) {
           if (states.contains(MaterialState.hovered)) return Colors.black;
           if (states.contains(MaterialState.pressed)) return Colors.black;
-          return Colors.grey; // null throus error in flutter 2.2+.
+          return Colors.grey; 
         }),
         overlayColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
