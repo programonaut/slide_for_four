@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'dart:io' show Platform;
 import '../helper/ws.dart';
 
 const UP = 1;
@@ -24,93 +25,137 @@ class MovableToken extends StatefulWidget {
 
 class _MovableTokenState extends State<MovableToken> {
   bool hover = false;
+  bool isMobile = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid || Platform.isIOS) {
+      isMobile = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     var ws = context.read<WS>();
     var player = ws.player;
+    return isMobile ? mobile(ws, player) : browser(ws, player);
+  }
+
+  Widget mobile(WS ws, int player) {
     return GestureDetector(
-      child: MouseRegion(
-        child: Container(
-          child: Center(
-            child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                ),
-                itemCount: 9,
-                itemBuilder: (context, index) {
-                  switch (index) {
-                    case UP:
-                      return ControlArrow(
-                          img: AssetImage(
-                              "assets/images/field-navigation-up.png"),
-                          hover: hover,
-                          hoverCallback: () =>
-                              widget.hoverCallback(widget.index - 4),
-                          hoverExitCallback: () => widget.hoverCallback(-1),
-                          callback: () => ws.sendJSON('turn', {
-                                'player': player,
-                                'index': widget.index,
-                                'direction': -4
-                              }));
+      onHorizontalDragEnd: (details) {
+        print(details);
+        if (details.primaryVelocity! < 0) {
+          print("left");
+          ws.sendJSON('turn', {
+            'player': player,
+            'index': widget.index,
+            'direction': -1,
+          });
+        } else {
+          print("right");
+          ws.sendJSON('turn', {
+            'player': player,
+            'index': widget.index,
+            'direction': 1,
+          });
+        }
+      },
+      onVerticalDragEnd: (details) {
+        if (details.primaryVelocity! < 0) {
+          print("up");
+          ws.sendJSON('turn', {
+            'player': player,
+            'index': widget.index,
+            'direction': -4,
+          });
+        } else {
+          print("down");
+          ws.sendJSON('turn', {
+            'player': player,
+            'index': widget.index,
+            'direction': 4,
+          });
+        }
+      },
+    );
+  }
 
-                    case LEFT:
-                      return ControlArrow(
-                          img: AssetImage(
-                              "assets/images/field-navigation-le.png"),
-                          hover: hover,
-                          hoverCallback: () =>
-                              widget.hoverCallback(widget.index - 1),
-                          hoverExitCallback: () => widget.hoverCallback(-1),
-                          callback: () => ws.sendJSON('turn', {
-                                'player': player,
-                                'index': widget.index,
-                                'direction': -1
-                              }));
+  Widget browser(WS ws, int player) {
+    return MouseRegion(
+      child: Center(
+        child: GridView.builder(
+            padding: EdgeInsets.all(0),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+            ),
+            itemCount: 9,
+            itemBuilder: (context, index) {
+              switch (index) {
+                case UP:
+                  return ControlArrow(
+                      img: AssetImage("assets/images/field-navigation-up.png"),
+                      hover: hover || isMobile,
+                      hoverCallback: () =>
+                          widget.hoverCallback(widget.index - 4),
+                      hoverExitCallback: () => widget.hoverCallback(-1),
+                      callback: () => ws.sendJSON('turn', {
+                            'player': player,
+                            'index': widget.index,
+                            'direction': -4
+                          }));
 
-                    case RIGHT:
-                      return ControlArrow(
-                          img: AssetImage(
-                              "assets/images/field-navigation-ri.png"),
-                          hover: hover,
-                          hoverCallback: () =>
-                              widget.hoverCallback(widget.index + 1),
-                          hoverExitCallback: () => widget.hoverCallback(-1),
-                          callback: () => ws.sendJSON('turn', {
-                                'player': player,
-                                'index': widget.index,
-                                'direction': 1
-                              }));
+                case LEFT:
+                  return ControlArrow(
+                      img: AssetImage("assets/images/field-navigation-le.png"),
+                      hover: hover || isMobile,
+                      hoverCallback: () =>
+                          widget.hoverCallback(widget.index - 1),
+                      hoverExitCallback: () => widget.hoverCallback(-1),
+                      callback: () => ws.sendJSON('turn', {
+                            'player': player,
+                            'index': widget.index,
+                            'direction': -1
+                          }));
 
-                    case DOWN:
-                      return ControlArrow(
-                          img: AssetImage(
-                              "assets/images/field-navigation-do.png"),
-                          hover: hover,
-                          hoverCallback: () =>
-                              widget.hoverCallback(widget.index + 4),
-                          hoverExitCallback: () => widget.hoverCallback(-1),
-                          callback: () => ws.sendJSON('turn', {
-                                'player': player,
-                                'index': widget.index,
-                                'direction': 4
-                              }));
+                case RIGHT:
+                  return ControlArrow(
+                      img: AssetImage("assets/images/field-navigation-ri.png"),
+                      hover: hover || isMobile,
+                      hoverCallback: () =>
+                          widget.hoverCallback(widget.index + 1),
+                      hoverExitCallback: () => widget.hoverCallback(-1),
+                      callback: () => ws.sendJSON('turn', {
+                            'player': player,
+                            'index': widget.index,
+                            'direction': 1
+                          }));
 
-                    default:
-                      return const SizedBox.shrink();
-                  }
-                }),
-          ),
-        ),
-        // TODO: rework
-        onEnter: (details) => setState(() {
-          hover = true;
-        }),
-        onExit: (details) => setState(() {
-          hover = false;
-        }),
+                case DOWN:
+                  return ControlArrow(
+                      img: AssetImage("assets/images/field-navigation-do.png"),
+                      hover: hover || isMobile,
+                      hoverCallback: () =>
+                          widget.hoverCallback(widget.index + 4),
+                      hoverExitCallback: () => widget.hoverCallback(-1),
+                      callback: () => ws.sendJSON('turn', {
+                            'player': player,
+                            'index': widget.index,
+                            'direction': 4
+                          }));
+
+                default:
+                  return const SizedBox.shrink();
+              }
+            }),
       ),
-      // onTap: () => widget.click(),
+      onEnter: (details) => setState(() {
+        hover = true;
+      }),
+      onExit: (details) => setState(() {
+        hover = false;
+      }),
     );
   }
 }

@@ -25,19 +25,9 @@ class PuzzleHack extends StatelessWidget {
           textTheme: GoogleFonts.gloriaHallelujahTextTheme(
             Theme.of(context).textTheme.apply(
                   bodyColor: Colors.black,
-                ), // If this is not set, then ThemeData.light().textTheme is used.
+                ),
           ),
         ),
-        // routes: {
-        //   // intial
-        //   Menu.path: (_) => Menu(),
-        //   GameSelect.path: (_) => GameSelect(),
-        //   Game.path: (_) => Game(),
-        //   GameSP.path: (_) => GameSP(),
-        //   Wait.path: (_) => Wait(),
-        //   Join.path: (_) => Join(),
-        //   Reconnect.path: (_) => Reconnect(),
-        // },
         onGenerateRoute:(settings) {
           switch (settings.name) {
             case Menu.path: return PageTransition(child: Menu(), type: PageTransitionType.fade);

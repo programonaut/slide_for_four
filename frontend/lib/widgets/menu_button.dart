@@ -14,21 +14,24 @@ class MenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () => onPressed(),
-      style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-          if (states.contains(MaterialState.hovered)) return Colors.black;
-          if (states.contains(MaterialState.pressed)) return Colors.black;
-          return Colors.grey; 
-        }),
-        overlayColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-          return Colors.transparent;
-        }),
+    return FittedBox(
+      fit: BoxFit.contain,
+      child: TextButton(
+        onPressed: () => onPressed(),
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+            if (states.contains(MaterialState.hovered)) return Colors.black;
+            if (states.contains(MaterialState.pressed)) return Colors.black;
+            return Colors.grey; 
+          }),
+          overlayColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+            return Colors.transparent;
+          }),
+        ),
+        child: Center(child: Text(text, style: TextStyle(fontSize: fontSize,), textAlign: TextAlign.center,)),
       ),
-      child: Text(text, style: TextStyle(fontSize: fontSize)),
     );
   }
 }

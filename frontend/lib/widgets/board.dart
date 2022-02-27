@@ -32,12 +32,18 @@ class Board extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Text(
-                    activePlayer
-                        ? "It's your turn!"
-                        : "It's your opponents turn!",
-                    style: TextStyle(
-                      fontSize: 36,
+                  FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Text(
+                        activePlayer
+                            ? "It's your turn!"
+                            : "It's your opponents turn!",
+                        style: TextStyle(
+                          fontSize: 36,
+                        ),
+                      ),
                     ),
                   ),
                   Text(

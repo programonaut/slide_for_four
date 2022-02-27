@@ -44,6 +44,8 @@ class _JoinState extends State<Join> {
                     showCursor: false,
                     controller: _controller,
                     decoration: InputDecoration(
+                      isDense: true,
+                      isCollapsed: true,
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey),
                       ),
