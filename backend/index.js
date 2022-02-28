@@ -2,7 +2,6 @@ const {
   WebSocketServer,
   WebSocket
 } = require("ws")
-const { readFileSync } = require('fs');
 const {
   Controller
 } = require("./logic/controller")
@@ -10,21 +9,12 @@ const {
   createId
 } = require("./logic/utils")
 
-const {
-  createServer
-} = require('https');
-
-const server = createServer({
-  cert: readFileSync('./certs/cert.pem'),
-  key: readFileSync('./certs/key.pem')
-}).listen(3000);
-
 const games = {}
 const players = {}
 
 const wsserver = new WebSocketServer({
-  "server": server
-})
+  port: 3000
+});
 
 wsserver.on('connection', function connection(socket, req) {
   console.log(`somone joined ${req.socket.remoteAddress}`);

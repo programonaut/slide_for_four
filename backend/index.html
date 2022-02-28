@@ -16,7 +16,7 @@
     <button onclick="right()">--></button>
     <div><b id="win"></b></div>
     <script>
-        let ws = new WebSocket('ws://localhost:3000');
+        let ws = new WebSocket('wss://server.slide-for-four.de');
 
         ws.onmessage = message => {
             const response = JSON.parse(message.data);
