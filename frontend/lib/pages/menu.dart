@@ -19,20 +19,35 @@ class Menu extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            MenuButton(
-              text: "Singleplayer",
-              onPressed: () => Navigator.of(context).pushNamed(
-                GameSP.path,
+            Spacer(flex: 1,),
+            Expanded(flex: 3, child: Image(image: AssetImage("assets/images/menu.png"),)),
+            Spacer(flex: 1,),
+            Expanded(
+              flex: 2, 
+              child: Center(
+                child: MenuButton(
+                  text: "Singleplayer",
+                  onPressed: () => Navigator.of(context).pushNamed(
+                    GameSP.path,
+                  ),
+                  fontSize: 48,
+                ),
               ),
-              fontSize: 48,
             ),
-            MenuButton(
-              text: "Multiplayer",
-              onPressed: () => Navigator.of(context).pushNamed(
-                GameSelect.path,
+            Spacer(flex: 1,),
+            Expanded(
+              flex: 2, 
+              child: Center(
+                child: MenuButton(
+                  text: "Multiplayer",
+                  onPressed: () => Navigator.of(context).pushNamed(
+                    GameSelect.path,
+                  ),
+                  fontSize: 48,
+                ),
               ),
-              fontSize: 48,
             ),
+            Spacer(flex: 1,),
           ],
         ),
       ),

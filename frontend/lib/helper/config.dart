@@ -1,0 +1,1 @@
+const String address = "wss://server.slide-for-four.de";

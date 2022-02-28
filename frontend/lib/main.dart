@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_puzzle_hack/helper/config.dart';
 import 'package:flutter_puzzle_hack/helper/ws.dart';
 import 'package:flutter_puzzle_hack/pages/game_over.dart';
 import 'package:flutter_puzzle_hack/pages/wait.dart';
@@ -17,7 +18,7 @@ class PuzzleHack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => WS("ws://localhost:3000"),
+      create: (context) => WS(address),
       child: MaterialApp(
         title: 'Flutter Puzzle Hack',
         debugShowCheckedModeBanner: false,

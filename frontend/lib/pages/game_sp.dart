@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_puzzle_hack/helper/config.dart';
 import 'package:flutter_puzzle_hack/widgets/board.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -27,10 +28,12 @@ class _GameSPState extends State<GameSP> {
     field = [1, 1, 1, 1, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0];
     var ws = context.read<WS>();
     ws.connect();
-    ai = Ai("ws://localhost:3000",
+    ws.reset();
+    ai = Ai(address,
         initCallback: (params) =>
             ws.sendJSON("join", {"code": params["code"]}));
     ai.connect();
+    ai.reset();
     ai.sendJSON("create", {});
     super.initState();
   }

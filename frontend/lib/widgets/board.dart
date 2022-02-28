@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle_hack/widgets/connection_visualization.dart';
 import 'package:flutter_puzzle_hack/widgets/grid.dart';
@@ -18,11 +19,17 @@ class Board extends StatelessWidget {
     required this.activePlayer,
     required this.room,
     required this.player,
-    required this.changes, this.hideRoom=false,
+    required this.changes,
+    this.hideRoom = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var isMobile = false;
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.android) {
+      isMobile = true;
+    }
     final size = MediaQuery.of(context).size;
     return Container(
       color: Colors.white,
@@ -40,13 +47,27 @@ class Board extends StatelessWidget {
                       child: Text(
                         activePlayer
                             ? "It's your turn!"
-                            : "It's your opponents turn!",
+                            : "It's not your turn!",
                         style: TextStyle(
                           fontSize: 36,
                         ),
                       ),
                     ),
                   ),
+                  if (isMobile) ...[
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                          "Swipe the white Tiles!",
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                   Text(
                     "You are: ${player == 1 ? "O" : "X"}",
                     style: TextStyle(
@@ -63,8 +84,7 @@ class Board extends StatelessWidget {
               ),
               if (!hideRoom) ...[
                 RoomCode(),
-              ]
-              else ...[
+              ] else ...[
                 SizedBox.shrink()
               ]
             ],

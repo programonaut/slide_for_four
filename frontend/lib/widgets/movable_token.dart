@@ -1,9 +1,9 @@
+import 'dart:io' show Platform;
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import '../helper/ws.dart';
 
 const UP = 1;
@@ -31,7 +31,7 @@ class _MovableTokenState extends State<MovableToken> {
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    if ( defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android) {
       isMobile = true;
     }
   }
