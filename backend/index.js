@@ -15,8 +15,8 @@ const {
 } = require('https');
 
 const server = createServer({
-  cert: readFileSync('./cert.pem'),
-  key: readFileSync('./key.pem')
+  cert: readFileSync('./certs/cert.pem'),
+  key: readFileSync('./certs/key.pem')
 }).listen(3000);
 
 const games = {}

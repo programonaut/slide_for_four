@@ -254,7 +254,7 @@ class Ai extends WS {
       }
     }
 
-    printField(findTarget(possibilities[idx], solutions));
+    // printField(findTarget(possibilities[idx], solutions));
     return possibilities[idx];
   }
 
@@ -298,7 +298,7 @@ class Ai extends WS {
     for (var i = 0; i < dist.length; i++) {
       if (dist[i].keys.isEmpty) {
         // printField(field);
-        print("empty");
+        // print("empty");
       }
 
       var minDist = dist[i].keys.reduce(min);

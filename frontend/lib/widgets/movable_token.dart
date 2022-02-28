@@ -47,14 +47,14 @@ class _MovableTokenState extends State<MovableToken> {
     return GestureDetector(
       onHorizontalDragEnd: (details) {
         if (details.primaryVelocity! < 0) {
-          print("left");
+          // print("left");
           ws.sendJSON('turn', {
             'player': player,
             'index': widget.index,
             'direction': -1,
           });
         } else {
-          print("right");
+          // print("right");
           ws.sendJSON('turn', {
             'player': player,
             'index': widget.index,
@@ -64,14 +64,14 @@ class _MovableTokenState extends State<MovableToken> {
       },
       onVerticalDragEnd: (details) {
         if (details.primaryVelocity! < 0) {
-          print("up");
+          // print("up");
           ws.sendJSON('turn', {
             'player': player,
             'index': widget.index,
             'direction': -4,
           });
         } else {
-          print("down");
+          // print("down");
           ws.sendJSON('turn', {
             'player': player,
             'index': widget.index,
