@@ -1,7 +1,7 @@
 {
     "name": "flutter_puzzle_hack",
     "short_name": "flutter_puzzle_hack",
-    "start_url": ".",
+    "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",

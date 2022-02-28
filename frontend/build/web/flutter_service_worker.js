@@ -42,13 +42,13 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "28a84287908d588a0cc3e588f1f0b4cd",
-"/": "28a84287908d588a0cc3e588f1f0b4cd",
+"index.html": "4ecc76310184e0e17217b24dd92917c5",
+"/": "4ecc76310184e0e17217b24dd92917c5",
 "main.dart.js": "b0566eafcb9bf43223d1838f7df86824",
-"manifest.json": "bf9320f3d5f8728aa857edd678bcbdb4",
+"manifest.json": "9e2cd623937c600af0e9c4b1f341f2ec",
 "mstile-150x150.png": "917022cbf4218a4c1c569799f37eea3c",
 "safari-pinned-tab.svg": "d816970e1a8ef9fe9802d3c33dd98481",
-"site.webmanifest": "b39d2ba17ae52b359c40935bfd771e5c",
+"site.webmanifest": "66a4aa5a9eb44151a2591ca30c781e70",
 "version.json": "0ae39462c0d93348a145631b559c0f5f"
 };
 
