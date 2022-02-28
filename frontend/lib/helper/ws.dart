@@ -102,7 +102,6 @@ class WS extends ChangeNotifier {
   }
 
   reset() {
-    print("reset");
     room = "";
     player = -1;
     activePlayer = -1;
