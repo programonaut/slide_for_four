@@ -28,7 +28,7 @@ class Field {
             winner = this.checkColumn(x);
 
             if (winner !== 0)
-            return winner
+                return winner
         }
         // diagonals
         winner = this.checkDiagonals();
@@ -48,7 +48,7 @@ class Field {
         let winner = this.field[col];
         let over = this.field.filter((v, i) => {
             if (i % this.width === col)
-            return i % this.width === col
+                return i % this.width === col
         }).every(v => v === winner)
         if (over)
             return winner;
@@ -88,11 +88,37 @@ class Field {
             let tmp = this.field[index + direction];
             this.field[index + direction] = this.field[index];
             this.field[index] = tmp;
+            return true;
         }
+        return false;
     }
 
     checkValidMove(player, index, direction, rules) {
-        return true;
+        let valid = true;
+        switch (direction) {
+            case -1:
+                if (index - 1 < 0 || this.field[index - 1] != player || index % 4 == 0)
+                    valid = false;
+                break;
+            case 1:
+                if (index + 1 >= this.field.length || this.field[index + 1] != player || (index + 1) % 4 == 0)
+                    valid = false;
+                break;
+            case -4:
+                if (index - 4 < 0 || this.field[index - 4] != player)
+                    valid = false;
+                break;
+            case 4:
+                if (index + 4 >= this.field.length || this.field[index + 4] != player)
+                    valid = false;
+                break;
+            default:
+                break;
+        }
+
+
+        console.log("valid move:", valid);
+        return valid;
     }
 
     /**

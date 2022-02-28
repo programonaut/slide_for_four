@@ -85,7 +85,8 @@ class Controller {
         if (!this.validMove(params))
             return;
 
-        this.field.move(params.player, params.index, params.direction);
+        if (!this.field.move(params.player, params.index, params.direction))
+            return;
 
         this.activePlayer = 3 - params.player;
 

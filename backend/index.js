@@ -2,6 +2,7 @@ const {
   WebSocketServer,
   WebSocket
 } = require("ws")
+const { readFileSync } = require('fs');
 const {
   Controller
 } = require("./logic/controller")
@@ -9,14 +10,23 @@ const {
   createId
 } = require("./logic/utils")
 
+const {
+  createServer
+} = require('https');
+
+const server = createServer({
+  cert: readFileSync('./cert.pem'),
+  key: readFileSync('./key.pem')
+}).listen(3000);
+
 const games = {}
 const players = {}
 
-const server = new WebSocketServer({
-  "port": 3000,
+const wsserver = new WebSocketServer({
+  "server": server
 })
 
-server.on('connection', function connection(socket, req) {
+wsserver.on('connection', function connection(socket, req) {
   console.log(`somone joined ${req.socket.remoteAddress}`);
   const ip = `${req.socket.remoteAddress}`;
   socket.on('message', function message(json) {
@@ -59,10 +69,10 @@ server.on('connection', function connection(socket, req) {
 
     socket.room = room;
     socket.id = 1;
-    
+
     games[room].joinGame(socket);
     players[ip] = room;
-    
+
     socket.sendJSON({
       type: 'init',
       params: {
@@ -89,7 +99,7 @@ server.on('connection', function connection(socket, req) {
 
       socket.room = params.code;
       socket.id = 2;
-      
+
       socket.sendJSON({
         type: 'init',
         params: {
