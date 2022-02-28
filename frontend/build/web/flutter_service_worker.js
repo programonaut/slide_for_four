@@ -3,7 +3,8 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "android-chrome-192x192.png": "7b60b468e8db6771f8a779027164ffa8",
+  ".vscode/settings.json": "19751b2a32e46d1ba1477f357123a898",
+"android-chrome-192x192.png": "7b60b468e8db6771f8a779027164ffa8",
 "android-chrome-512x512.png": "26dc70e8564b92493db2432222e20177",
 "apple-touch-icon.png": "88576851f48f857f126fbb9f50ae496d",
 "assets/animations/circle.riv": "321a69c527e0d5a60526bef9c6292ac4",
@@ -41,9 +42,9 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "964c3e12466fdf17c4548f722da8aa55",
-"/": "964c3e12466fdf17c4548f722da8aa55",
-"main.dart.js": "c1461e7ed7c2a1927aabe26a2ac37ee6",
+"index.html": "28a84287908d588a0cc3e588f1f0b4cd",
+"/": "28a84287908d588a0cc3e588f1f0b4cd",
+"main.dart.js": "b0566eafcb9bf43223d1838f7df86824",
 "manifest.json": "bf9320f3d5f8728aa857edd678bcbdb4",
 "mstile-150x150.png": "917022cbf4218a4c1c569799f37eea3c",
 "safari-pinned-tab.svg": "d816970e1a8ef9fe9802d3c33dd98481",
