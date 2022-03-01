@@ -21,7 +21,7 @@ class PuzzleHack extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => WS(address),
       child: MaterialApp(
-        title: 'Flutter Puzzle Hack',
+        title: 'Slide for Four',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           textTheme: GoogleFonts.gloriaHallelujahTextTheme(

@@ -61621,7 +61621,7 @@ $1(a){return this.a.glp()[a]!==this.b[a]},
 $S:27}
 A.Hq.prototype={
 R(a,b){var s=null,r=A.b2(b).W.a3e(B.o),q=A.ex(s,r.a),p=A.ex(s,r.b),o=A.ex(s,r.c),n=A.ex(s,r.d),m=A.ex(s,r.e),l=A.ex(s,r.f),k=A.ex(s,r.r),j=A.ex(s,r.x),i=A.ex(s,r.y)
-return new A.uD(new A.rZ(new A.a_7(),s,s,s,A.awo(),A.avs(),t.kL),s,s,new A.wC("/",new A.a_8(),"Flutter Puzzle Hack",A.aeK(s,A.a4X(A.ex(s,r.z),A.ex(s,r.Q),A.ex(s,r.ch),q,p,o,n,m,l,A.ex(s,r.cx),A.ex(s,r.cy),A.ex(s,r.db),k,j,i)),!1,s),s,t.ce)}}
+return new A.uD(new A.rZ(new A.a_7(),s,s,s,A.awo(),A.avs(),t.kL),s,s,new A.wC("/",new A.a_8(),"Slide for Four",A.aeK(s,A.a4X(A.ex(s,r.z),A.ex(s,r.Q),A.ex(s,r.ch),q,p,o,n,m,l,A.ex(s,r.cx),A.ex(s,r.cy),A.ex(s,r.db),k,j,i)),!1,s),s,t.ce)}}
 A.a_7.prototype={
 $1(a){return A.asp("wss://server.slide-for-four.de")},
 $S:353}
