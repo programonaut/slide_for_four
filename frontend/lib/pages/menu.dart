@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_puzzle_hack/widgets/connection_visualization.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/ws.dart';
@@ -13,43 +14,52 @@ class Menu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var ws = context.read<WS>();
+    ws.reset();
+    ws.connect();
+
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Spacer(flex: 1,),
-            Expanded(flex: 3, child: Image(image: AssetImage("assets/images/menu.png"),)),
-            Spacer(flex: 1,),
-            Expanded(
-              flex: 2, 
-              child: Center(
-                child: MenuButton(
-                  text: "Singleplayer",
-                  onPressed: () => Navigator.of(context).pushNamed(
-                    GameSP.path,
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Spacer(flex: 1,),
+                Expanded(flex: 3, child: Image(image: AssetImage("assets/images/menu.png"),)),
+                Spacer(flex: 1,),
+                Expanded(
+                  flex: 2, 
+                  child: Center(
+                    child: MenuButton(
+                      text: "Singleplayer",
+                      onPressed: () => Navigator.of(context).pushReplacementNamed(
+                        GameSP.path,
+                      ),
+                      fontSize: 48,
+                    ),
                   ),
-                  fontSize: 48,
                 ),
-              ),
-            ),
-            Spacer(flex: 1,),
-            Expanded(
-              flex: 2, 
-              child: Center(
-                child: MenuButton(
-                  text: "Multiplayer",
-                  onPressed: () => Navigator.of(context).pushNamed(
-                    GameSelect.path,
+                Spacer(flex: 1,),
+                Expanded(
+                  flex: 2, 
+                  child: Center(
+                    child: MenuButton(
+                      text: "Multiplayer",
+                      onPressed: () => Navigator.of(context).pushReplacementNamed(
+                        GameSelect.path,
+                      ),
+                      fontSize: 48,
+                    ),
                   ),
-                  fontSize: 48,
                 ),
-              ),
+                Spacer(flex: 1,),
+              ],
             ),
-            Spacer(flex: 1,),
-          ],
-        ),
+          ),
+          ConnectionVisualization(),
+        ],
       ),
     );
   }

@@ -42,8 +42,8 @@ class _GameSelectState extends State<GameSelect> {
   @override
   Widget build(BuildContext context) {
     var ws = context.read<WS>();
-    ws.reset();
-    ws.connect();
+    // ws.reset();
+    // ws.connect();
 
     return Scaffold(
       body: Stack(

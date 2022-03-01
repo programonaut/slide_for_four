@@ -23,51 +23,54 @@ class _GridState extends State<Grid> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SizedBox.square(
-        dimension: widget.size.height * 0.5,
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/field-outline.png"),
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: SizedBox.square(
+          dimension: widget.size.height * 0.5,
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/field-outline.png"),
+              ),
             ),
-          ),
-          child: GridView.builder(
-          padding: const EdgeInsets.all(8.0),
-            //TODO: dynamic
-            gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4
-                    //, mainAxisSpacing: 5, crossAxisSpacing: 5
-                    ),
-            //TODO: dynamic
-            itemCount: widget.numbers.length,
-            itemBuilder: (context, index) {
-              int currNum = widget.numbers[index];
-              return Stack(
-                children: [
-                  if (highlighted == index) ...[
-                    Center(
-                      child: Image(
-                        image: AssetImage("assets/images/highlight.png"),
-                        color: Colors.yellow[700],
+            child: GridView.builder(
+            padding: const EdgeInsets.all(8.0),
+              //TODO: dynamic
+              gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4
+                      //, mainAxisSpacing: 5, crossAxisSpacing: 5
                       ),
-                    ),
+              //TODO: dynamic
+              itemCount: widget.numbers.length,
+              itemBuilder: (context, index) {
+                int currNum = widget.numbers[index];
+                return Stack(
+                  children: [
+                    if (highlighted == index) ...[
+                      Center(
+                        child: Image(
+                          image: AssetImage("assets/images/highlight.png"),
+                          color: Colors.yellow[700],
+                        ),
+                      ),
+                    ],
+                    if (currNum != 0) ...[
+                      PlayerToken(
+                        index: index,
+                        circle: currNum == 1,
+                        changed: widget.changes[index],
+                      ),
+                    ] else ...[
+                      MovableToken(
+                        // click: clickGrid,
+                        index: index,
+                        hoverCallback: highlight,
+                      ),
+                    ],
                   ],
-                  if (currNum != 0) ...[
-                    PlayerToken(
-                      index: index,
-                      circle: currNum == 1,
-                      changed: widget.changes[index],
-                    ),
-                  ] else ...[
-                    MovableToken(
-                      // click: clickGrid,
-                      index: index,
-                      hoverCallback: highlight,
-                    ),
-                  ],
-                ],
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       ),

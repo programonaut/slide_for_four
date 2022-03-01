@@ -68,10 +68,13 @@ class Board extends StatelessWidget {
                       ),
                     ),
                   ],
-                  Text(
-                    "You are: ${player == 1 ? "O" : "X"}",
-                    style: TextStyle(
-                      fontSize: 24,
+                  FittedBox(
+                    // fit: BoxFit.fitWidth,
+                    child: Text(
+                      "You are: ${player == 1 ? "O" : "X"}",
+                      style: TextStyle(
+                        fontSize: 24,
+                      ),
                     ),
                   ),
                 ],

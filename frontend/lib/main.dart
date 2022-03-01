@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_puzzle_hack/helper/config.dart';
 import 'package:flutter_puzzle_hack/helper/ws.dart';
 import 'package:flutter_puzzle_hack/pages/game_over.dart';
+import 'package:flutter_puzzle_hack/pages/no_connection.dart';
 import 'package:flutter_puzzle_hack/pages/wait.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
@@ -39,6 +40,7 @@ class PuzzleHack extends StatelessWidget {
             case Join.path: return PageTransition(child: Join(), type: PageTransitionType.fade);
             case Reconnect.path: return PageTransition(child: Reconnect(), type: PageTransitionType.fade);
             case GameOver.path: return PageTransition(child: GameOver(), type: PageTransitionType.fade);
+            case NoConnection.path: return PageTransition(child: NoConnection(), type: PageTransitionType.fade);
             default: return PageTransition(child: Menu(), type: PageTransitionType.fade);
           }
         },
