@@ -39,6 +39,7 @@ class WS extends ChangeNotifier {
         switch (data["type"]) {
           case "connected":
             state = WsState.CONNECTED;
+            ping();
             break;
           case "disconnected":
             state = WsState.DISCONNECTED;
@@ -109,5 +110,11 @@ class WS extends ChangeNotifier {
     field = [];
     gameOver = false;
     winner = -1;
+  }
+
+  void ping() async {
+    while (state == WsState.CONNECTED) {
+      await Future.delayed(const Duration(seconds: 15), () => sendJSON("ping", {}));
+    }
   }
 }
