@@ -13,8 +13,10 @@ const games = {}
 const players = {}
 
 const wsserver = new WebSocketServer({
-  port: 3000
+  port: 5000
 });
+
+console.log(`The server runs on port 5000`);
 
 wsserver.on('connection', function connection(socket, req) {
   console.log(`somone joined ${req.socket.remoteAddress}`);
